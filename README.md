@@ -1,9 +1,9 @@
 # YTbrowser
 
-YTbrowser это браузер на Android webView для просмотра Youtube.
+YTbrowser — browser based on Android webView for watching YouTube.
 
-Функции: 
-Фоновый режим.
-Блокировка и промотка рекламы.
-Автоповтор видео.
-Пароль для входа и пароль стирающий ключевые данные приложения (для экстренных случаев).
+​Features:
+— ​Background play mode.
+— ​Ad blocking and skipping.
+— ​Video auto-repeat.
+— ​Password for login and password that wipes data + suspends access to the application (for emergency situations).
