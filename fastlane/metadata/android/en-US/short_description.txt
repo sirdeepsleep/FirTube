@@ -1,1 +1,1 @@
-YTbrowser is a browser based on Android webView for watching YouTube.
+YTbrowser — browser based on Android webView for watching YouTube.
