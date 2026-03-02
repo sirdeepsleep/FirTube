@@ -20,10 +20,12 @@
         <activity
             android:name=".SecurityActivity"
 			android:exported="false"
+			android:process=":security"
 			android:launchMode="singleInstance"
 			android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
-            android:windowSoftInputMode="stateAlwaysVisible"/>
+            android:windowSoftInputMode="stateAlwaysVisible"
+			android:excludeFromRecents="true"/>
 
         <activity-alias
 		android:name=".SecurityActivityAlias" 
@@ -43,7 +45,8 @@
 
         <activity android:name=".MainActivity"
             android:exported="false"
-            android:launchMode="singleInstance"/>
+            android:launchMode="singleInstance"
+			android:excludeFromRecents="true"/>
 
          <service 
             android:name=".YTService"
