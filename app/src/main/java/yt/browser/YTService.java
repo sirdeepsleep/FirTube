@@ -16,7 +16,7 @@ public class YTService extends Service {
         serviceContext = this;
     }
 
-   public static void setupWebStatic(WebView v) {
+   static void setupWebStatic(WebView v) {
     WebSettings s = v.getSettings();
     s.setJavaScriptEnabled(true);
     s.setDomStorageEnabled(true);
