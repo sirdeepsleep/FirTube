@@ -75,7 +75,11 @@ public class ZeroActivity extends Activity {
         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(-1, -2);
         lp.setMargins(0, 100, 0, 0);
         root.addView(btn, lp);
-
+        int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        int spacerHeight = (int) (screenHeight * 0.07);
+        View spacer = new View(this);
+        LinearLayout.LayoutParams spacerParams = new LinearLayout.LayoutParams(-1, spacerHeight); 
+        root.addView(spacer, spacerParams);
         setContentView(root);
     }
 }
