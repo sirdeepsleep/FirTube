@@ -53,7 +53,7 @@
             android:foregroundServiceType="specialUse">
             <property 
                 android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
-                android:value="I cant use mediaPlayback type, cos YT detect it and stops play in background."/>
+                android:value="Background retention and management of WebView."/>
         </service>
     </application>
 </manifest>
