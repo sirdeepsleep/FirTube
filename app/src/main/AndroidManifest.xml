@@ -20,7 +20,6 @@
         <activity
             android:name=".SecurityActivity"
 			android:exported="false"
-			android:process=":security"
 			android:launchMode="singleInstance"
 			android:screenOrientation="portrait"
 			android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
