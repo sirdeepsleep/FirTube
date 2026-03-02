@@ -11,8 +11,9 @@ import android.graphics.Color;
 
 public class ZeroActivity extends Activity {
     
-    public static boolean rep = true;
-    public static boolean back = true;
+    static boolean rep = true;
+    static boolean back = true;
+    static boolean wait = true;
 
     @Override
     protected void onPause() {
@@ -69,6 +70,7 @@ public class ZeroActivity extends Activity {
         btn.setOnClickListener(v -> {
             Intent i = new Intent(this, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+            wait=false;
             startActivity(i);
             finishAndRemoveTask();
         });
