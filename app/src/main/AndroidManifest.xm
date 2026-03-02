@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <application
+        android:label="YTbrowser"
+		android:icon="@drawable/ic_launcher"
+		android:allowBackup="false"
+		android:debuggable="false"
+		android:largeHeap="true"
+		android:requestLegacyExternalStorage="false"
+        android:fullBackupContent="false"
+		android:extractNativeLibs="false"
+        android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
+        
+        <activity
+            android:name=".SecurityActivity"
+			android:exported="false"
+			android:launchMode="singleInstance"
+			android:screenOrientation="portrait"
+			android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
+            android:windowSoftInputMode="stateAlwaysVisible"/>
+
+        <activity-alias
+		android:name=".SecurityActivityAlias" 
+		android:exported="true"
+        android:targetActivity=".SecurityActivity">
+          <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+             <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+        </activity-alias>
+
+        <activity android:name=".ZeroActivity"
+            android:exported="false"
+			android:launchMode="singleInstance"
+		    android:screenOrientation="portrait"
+			android:excludeFromRecents="true"/>
+
+        <activity android:name=".MainActivity"
+            android:exported="false"
+            android:launchMode="singleInstance"/>
+
+         <service 
+            android:name=".YTService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property 
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="I cant use mediaPlayback type, cos YT detect it and stops play in background."/>
+        </service>
+    </application>
+</manifest>
