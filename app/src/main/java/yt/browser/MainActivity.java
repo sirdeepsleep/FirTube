@@ -9,12 +9,12 @@ import android.widget.FrameLayout;
 import android.webkit.WebView;
 
 public class MainActivity extends Activity {
-    public static volatile boolean keepBlocking = false; 
-    public static WebView sharedWeb;
+    static volatile boolean keepBlocking = false; 
+    static WebView sharedWeb;
     private FrameLayout root;
 
-    public static class MyWebView extends WebView {
-        public MyWebView(Context context) {
+    static class MyWebView extends WebView {
+        MyWebView(Context context) {
             super(context);
         }
 
