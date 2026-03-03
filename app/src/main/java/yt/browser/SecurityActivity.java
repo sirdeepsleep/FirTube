@@ -151,12 +151,8 @@ public class SecurityActivity extends Activity {
                 forceBind();
             } else if (verifyPassword(input, storedPass)) {
                 try {
-					if (!ZeroActivity.continued) {
                     startActivity(new Intent(this, ZeroActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK));
-					} else {
-					startActivity(new Intent(this, MainActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK));
-					}
-					finishAndRemoveTask();
+				    finishAndRemoveTask();
                 } catch (Throwable StateErr) {
                     Toast.makeText(this, "Error!", Toast.LENGTH_SHORT).show();
                 }
