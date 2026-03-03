@@ -74,7 +74,7 @@ public class ZeroActivity extends Activity {
         root.addView(swBack);
 
         Switch swBB = new Switch(this);
-        swBB.setText("Banner Block   ");
+        swBB.setText("Banner Block (expiremental)  ");
         swBB.setTextColor(Color.WHITE);
         swBB.setTextSize(20);
         swBB.setChecked(bannerBlock);
@@ -83,7 +83,7 @@ public class ZeroActivity extends Activity {
         root.addView(swBB);
 
         Switch swVBS = new Switch(this);
-        swVBS.setText("Video Ads Skip   ");
+        swVBS.setText("Video Ads Skip (expiremental)  ");
         swVBS.setTextColor(Color.WHITE);
         swVBS.setTextSize(20);
         swVBS.setChecked(VideoAdsSkip);
