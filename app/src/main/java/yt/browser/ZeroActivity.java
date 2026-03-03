@@ -1,5 +1,7 @@
 package yt.browser;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
