@@ -46,23 +46,31 @@ public class TransactionActivity extends Activity {
        finishAndRemoveTask();
     }
 
-    private void showWelcomeDialog(final SharedPreferences prefs) {
-        new AlertDialog.Builder(this)
-                .setTitle("Hello!")
-                .setMessage("YTbrowser — browser based on Android webView for watching YouTube.\n\n" +
-                        "Features:\n" +
-                        "— Background play mode.\n" +
-                        "— Ad blocking and skipping.\n" +
-                        "— Video auto-repeat.\n" +
-                        "— Password for login and password that wipes data + suspends access to the application (for emergency situations).")
-                .setPositiveButton("OK", (dialog, which) -> {
-                    prefs.edit().putBoolean("welcome_done", true).apply();
-                    startSecurityAndFinish();
-                })
-                .setCancelable(false)
-                .create()
-                .show();
+    private void showWelcomeDialog(final android.content.SharedPreferences prefs) {
+    android.app.AlertDialog d = new android.app.AlertDialog.Builder(this)
+            .setTitle("Hello!")
+            .setMessage("YTbrowser — browser based on Android webView for watching YouTube.\n\n" +
+                    "Features:\n" +
+                    "— Background play mode.\n" +
+                    "— Ad blocking and skipping.\n" +
+                    "— Video auto-repeat.\n" +
+                    "— Password for login and password that wipes data + suspends access to the application (for emergency situations).")
+            .setPositiveButton("OK", (dialog, which) -> {
+                prefs.edit().putBoolean("welcome_done", true).apply();
+                startSecurityAndFinish();
+            })
+            .setCancelable(false)
+            .show();
+
+    android.view.Window w = d.getWindow();
+    if (w != null) {
+        android.view.WindowManager.LayoutParams lp = w.getAttributes();
+        lp.gravity = android.view.Gravity.CENTER;
+        lp.y = 0;
+        w.setAttributes(lp);
     }
+    }
+
 
     private void startSecurityAndFinish() {
         Intent securityIntent = new Intent(this, SecurityActivity.class);
