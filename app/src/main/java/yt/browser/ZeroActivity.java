@@ -18,6 +18,15 @@ public class ZeroActivity extends Activity {
     static boolean bannerBlock = false;
     static boolean VideoAdsSkip = false;
 
+    private void showConfirm(String title, String message, Runnable onConfirm) {
+    new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
+        .setTitle(title)
+        .setMessage(message)
+        .setPositiveButton("YES [DISABLE]", (dialog, which) -> onConfirm.run())
+        .setNegativeButton("CANCEL", null)
+        .show();
+    }
+
     @Override
     protected void onPause() {
        super.onPause();
