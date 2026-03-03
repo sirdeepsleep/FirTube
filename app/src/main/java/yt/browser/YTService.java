@@ -80,7 +80,7 @@ public class YTService extends Service {
         return START_STICKY;
     }
 
-    private boolean isAppForeground(ActivityManager am) {
+    static boolean isAppForeground(ActivityManager am) {
         List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
         if (procs == null) return false;
         for (ActivityManager.RunningAppProcessInfo p : procs) {
