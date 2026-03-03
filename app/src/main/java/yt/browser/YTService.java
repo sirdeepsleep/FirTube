@@ -69,7 +69,7 @@ public class YTService extends Service {
         NotificationChannel chan = new NotificationChannel("yt", "Svc", NotificationManager.IMPORTANCE_LOW);
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(chan);
         Notification n = new Notification.Builder(this, "yt")
-                .setContentTitle("Engine Active")
+                .setContentTitle("Media Play")
                 .setSmallIcon(android.R.drawable.ic_lock_lock)
                 .build();
 
