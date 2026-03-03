@@ -91,8 +91,8 @@ public class ZeroActivity extends Activity {
         swBB.setOnClickListener(v -> {
         if (swBB.isChecked()) {
         swBB.setChecked(false);
-        showConfirm("Disable Banners?", 
-            "Are you sure you want to disable banners? This may be unfair to the platform and its authors, as they will not be able to earn from creating and hosting content.", 
+        showConfirm("Do you really want disable banners?", 
+            "This may be unfair to the platform and its creators, as they will not be able to make money from creating and posting content.", 
             () -> { bannerBlock = true; swBB.setChecked(true); });
         } else {
         bannerBlock = false;
@@ -108,8 +108,8 @@ public class ZeroActivity extends Activity {
         swVBS.setOnClickListener(v -> {
         if (swVBS.isChecked()) {
         swVBS.setChecked(false);
-        showConfirm("Disable Video Ads?", 
-            "Are you sure you want to disable video ads? This may be unfair to the platform and its authors, as they will not be able to earn from creating and hosting content.", 
+        showConfirm("Do you really want disable ads in videos?", 
+            "This may be unfair to the platform and its creators, as they will not be able to make money from creating and posting content.", 
             () -> { VideoAdsSkip = true; swVBS.setChecked(true); });
          } else {
         VideoAdsSkip = false;
