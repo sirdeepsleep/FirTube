@@ -77,7 +77,7 @@ public class MainActivity extends Activity {
            Intent i = new Intent(this, SecurityActivity.class);
            i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
            startActivity(i);
-           finishAndRemoveTask();
+           moveTaskToBack(true);
         }
         keepBlocking = false;
         if (sharedWeb != null) {
