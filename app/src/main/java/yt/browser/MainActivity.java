@@ -13,6 +13,18 @@ public class MainActivity extends Activity {
     static WebView sharedWeb;
     private FrameLayout root;
 
+    private boolean isAppForeground() {
+    ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    java.util.List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
+    if (procs == null) return false;
+    for (ActivityManager.RunningAppProcessInfo p : procs) {
+        if (p.processName.equals(getPackageName())) {
+            return p.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
+        }
+    }
+    return false;
+    }
+    
     static class MyWebView extends WebView {
         MyWebView(Context context) {
             super(context);
@@ -55,7 +67,9 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause(); 
-        ZeroActivity.wait=true;
+          if (!isAppForeground()) {
+        ZeroActivity.wait = true;
+          }       
         if (sharedWeb != null) {
             sharedWeb.onResume();      
             sharedWeb.resumeTimers();  
