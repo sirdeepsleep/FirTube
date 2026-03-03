@@ -10,10 +10,12 @@ import android.widget.Switch;
 import android.graphics.Color;
 
 public class ZeroActivity extends Activity {
+
+    static boolean wait = true;
+    static boolean continued = false;
     
     static boolean rep = false;
     static boolean back = false;
-    static boolean wait = false;
     static boolean bannerBlock = false;
     static boolean VideoBannerSkip = false;
 
@@ -91,6 +93,7 @@ public class ZeroActivity extends Activity {
             Intent i = new Intent(this, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             wait=false;
+            continued=true;
             startActivity(i);
             finishAndRemoveTask();
         });
