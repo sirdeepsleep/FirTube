@@ -11,7 +11,6 @@ import android.widget.FrameLayout;
 import android.webkit.WebView;
 
 public class MainActivity extends Activity {
-    static volatile boolean keepBlocking = false; 
     static WebView sharedWeb;
     private FrameLayout root;
 
