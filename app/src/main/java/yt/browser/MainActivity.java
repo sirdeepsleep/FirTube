@@ -79,16 +79,6 @@ public class MainActivity extends Activity {
             sharedWeb.onResume();      
             sharedWeb.resumeTimers();  
         }
-        /*
-        if (!ZeroActivity.back) {
-          if (sharedWeb != null) {
-             sharedWeb.stopLoading();
-             sharedWeb.onPause();
-             sharedWeb.pauseTimers();
-          }
-          finishAndRemoveTask();
-        }
-        */
     }
 
     @Override
