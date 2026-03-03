@@ -20,6 +20,28 @@ public class YTService extends Service {
     s.setDomStorageEnabled(true);
     s.setMediaPlaybackRequiresUserGesture(false);
     v.setWebViewClient(new WebViewClient() {
+
+    @Override
+    public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request) {
+    Uri url = request.getUrl();
+    if (url == null) return super.shouldInterceptRequest(view, request);
+    
+    String host = url.getHost();
+
+    if (host != null) {
+        boolean isEssential = host.contains("youtube.com") || 
+                             host.contains("googlevideo.com") || 
+                             host.contains("gstatic.com") ||
+                             host.contains("i.ytimg.com") ||  
+                             host.contains("yt3.ggpht.com") ||
+                             host.contains("google.com");
+
+        if (!isEssential) {
+            return new WebResourceResponse("text/plain", "UTF-8", null);
+        }
+    }
+    return super.shouldInterceptRequest(view, request);
+    }
         
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
