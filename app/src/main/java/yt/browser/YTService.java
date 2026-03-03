@@ -49,7 +49,7 @@ public class YTService extends Service {
                 "  const selectors = ['.ytp-ad-overlay-container', '.ytp-ad-message-container', 'ytm-companion-ad-renderer', 'ytm-promoted-sparkles-web-renderer', '.ad-unit', 'ytm-promoted-video-renderer'];" +
                 "  selectors.forEach(selector => {" +
                 "    const el = document.querySelector(selector);" +
-                "  if ("+ZeroActivity.banerBlock+"==true){"+       
+                "  if ("+ZeroActivity.bannerBlock+"==true){"+       
                 "    if (el) el.remove();" +
                 "  }});" +
                 "}, 200);", null);
