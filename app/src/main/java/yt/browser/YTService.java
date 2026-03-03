@@ -13,7 +13,6 @@ public class YTService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        serviceContext = this;
     }
 
    static void setupWebStatic(WebView v) {
@@ -63,33 +62,9 @@ public class YTService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         startEnforcedService();
 
-        new Thread(() -> {
-            ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-            boolean wasInBack = true;
-            while (true) {
-                SystemClock.sleep(500);
-                boolean isFore = isAppForeground(am);
-                if (wasInBack && isFore) {
-                    MainActivity.keepBlocking = false;
-                    wasInBack = false;
-                } 
-                if (!isFore) wasInBack = true;
-            }
-        }).start();
-
         return START_STICKY;
     }
 
-    static boolean isAppForeground(ActivityManager am) {
-        List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
-        if (procs == null) return false;
-        for (ActivityManager.RunningAppProcessInfo p : procs) {
-            if (p.processName.equals("yt.browser")) {
-                return p.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
-            }
-        }
-        return false;
-    }
 
     private void startEnforcedService() {
         NotificationChannel chan = new NotificationChannel("yt", "Svc", NotificationManager.IMPORTANCE_LOW);
