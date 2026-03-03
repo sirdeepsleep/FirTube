@@ -14,6 +14,7 @@ public class ZeroActivity extends Activity {
     static boolean rep = true;
     static boolean back = true;
     static boolean wait = true;
+    static boolean banerBlock = true;
 
     @Override
     protected void onPause() {
@@ -62,6 +63,15 @@ public class ZeroActivity extends Activity {
         swBack.setPadding(0, 50, 0, 50);
         swBack.setOnCheckedChangeListener((v, isChecked) -> back = isChecked);
         root.addView(swBack);
+
+        Switch swBB = new Switch(this);
+        swBB.setText("Baner Block   ");
+        swBB.setTextColor(Color.WHITE);
+        swBB.setTextSize(20);
+        swBB.setChecked(back);
+        swBB.setPadding(0, 50, 0, 50);
+        swBB.setOnCheckedChangeListener((v, isChecked) -> banerBlock = isChecked);
+        root.addView(swBB);
 
         Button btn = new Button(this);
         btn.setText("CONTINUE");
