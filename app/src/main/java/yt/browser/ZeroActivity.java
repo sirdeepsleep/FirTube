@@ -11,11 +11,11 @@ import android.graphics.Color;
 
 public class ZeroActivity extends Activity {
     
-    static boolean rep = true;
-    static boolean back = true;
-    static boolean wait = true;
-    static boolean bannerBlock = true;
-    static boolean VideoBannerSkip = true;
+    static boolean rep = false;
+    static boolean back = false;
+    static boolean wait = false;
+    static boolean bannerBlock = false;
+    static boolean VideoBannerSkip = false;
 
     @Override
     protected void onPause() {
@@ -69,7 +69,7 @@ public class ZeroActivity extends Activity {
         swBB.setText("Baner Block   ");
         swBB.setTextColor(Color.WHITE);
         swBB.setTextSize(20);
-        swBB.setChecked(back);
+        swBB.setChecked(bannerBlock);
         swBB.setPadding(0, 50, 0, 50);
         swBB.setOnCheckedChangeListener((v, isChecked) -> bannerBlock = isChecked);
         root.addView(swBB);
@@ -78,7 +78,7 @@ public class ZeroActivity extends Activity {
         swVBS.setText("Video Banners Skip   ");
         swVBS.setTextColor(Color.WHITE);
         swVBS.setTextSize(20);
-        swVBS.setChecked(back);
+        swVBS.setChecked(VideoBannerSkip);
         swVBS.setPadding(0, 50, 0, 50);
         swVBS.setOnCheckedChangeListener((v, isChecked) -> VideoBannerSkip = isChecked);
         root.addView(swVBS);
