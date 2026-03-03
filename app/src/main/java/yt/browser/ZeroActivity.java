@@ -12,8 +12,7 @@ import android.graphics.Color;
 public class ZeroActivity extends Activity {
 
     static boolean wait = true;
-    static boolean continued = false;
-    
+    static boolean continued = false;   
     static boolean rep = false;
     static boolean back = false;
     static boolean bannerBlock = false;
