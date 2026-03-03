@@ -16,7 +16,7 @@ public class ZeroActivity extends Activity {
     static boolean rep = false;
     static boolean back = false;
     static boolean bannerBlock = false;
-    static boolean VideoBannerSkip = false;
+    static boolean VideoAdsSkip = false;
 
     @Override
     protected void onPause() {
@@ -74,7 +74,7 @@ public class ZeroActivity extends Activity {
         root.addView(swBack);
 
         Switch swBB = new Switch(this);
-        swBB.setText("Baner Block   ");
+        swBB.setText("Banner Block   ");
         swBB.setTextColor(Color.WHITE);
         swBB.setTextSize(20);
         swBB.setChecked(bannerBlock);
@@ -83,12 +83,12 @@ public class ZeroActivity extends Activity {
         root.addView(swBB);
 
         Switch swVBS = new Switch(this);
-        swVBS.setText("Video Banners Skip   ");
+        swVBS.setText("Video Ads Skip   ");
         swVBS.setTextColor(Color.WHITE);
         swVBS.setTextSize(20);
         swVBS.setChecked(VideoBannerSkip);
         swVBS.setPadding(0, 50, 0, 50);
-        swVBS.setOnCheckedChangeListener((v, isChecked) -> VideoBannerSkip = isChecked);
+        swVBS.setOnCheckedChangeListener((v, isChecked) -> VideoAdsSkip = isChecked);
         root.addView(swVBS);
 
         Button btn = new Button(this);
