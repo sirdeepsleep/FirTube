@@ -16,7 +16,25 @@
         android:fullBackupContent="false"
 		android:extractNativeLibs="false"
         android:theme="@android:style/Theme.DeviceDefault.NoActionBar">
-        
+
+		<activity-alias
+		android:name=".TransactionActivityAlias" 
+		android:exported="true"
+        android:targetActivity=".TransactionActivity">
+          <intent-filter>
+             <action android:name="android.intent.action.MAIN" />
+             <category android:name="android.intent.category.LAUNCHER" />
+          </intent-filter>
+        </activity-alias>
+		
+		<activity
+            android:name=".TransactionActivity"
+			android:exported="false"
+			android:process=":transaction"
+			android:launchMode="singleInstance"
+			android:screenOrientation="portrait"
+			android:excludeFromRecents="true"/>
+		
         <activity
             android:name=".SecurityActivity"
 			android:exported="false"
@@ -26,16 +44,6 @@
 			android:theme="@android:style/Theme.Black.NoTitleBar.Fullscreen"
             android:windowSoftInputMode="stateAlwaysVisible"
 			android:excludeFromRecents="true"/>
-
-        <activity-alias
-		android:name=".SecurityActivityAlias" 
-		android:exported="true"
-        android:targetActivity=".SecurityActivity">
-          <intent-filter>
-             <action android:name="android.intent.action.MAIN" />
-             <category android:name="android.intent.category.LAUNCHER" />
-          </intent-filter>
-        </activity-alias>
 
         <activity android:name=".ZeroActivity"
             android:exported="false"
