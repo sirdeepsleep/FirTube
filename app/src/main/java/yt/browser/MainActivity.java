@@ -94,7 +94,7 @@ public class MainActivity extends Activity {
            startActivity(i);
            moveTaskToBack(true);
         }
-        keepBlocking = false;
+        
         if (sharedWeb != null) {
             attachToUI();
             sharedWeb.onResume();
