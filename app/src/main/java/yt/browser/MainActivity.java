@@ -55,6 +55,7 @@ public class MainActivity extends Activity {
     @Override
     protected void onPause() {
         super.onPause(); 
+        ZeroActivity.wait=true;
         if (sharedWeb != null) {
             sharedWeb.onResume();      
             sharedWeb.resumeTimers();  
