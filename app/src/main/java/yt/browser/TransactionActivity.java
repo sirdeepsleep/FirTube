@@ -73,6 +73,8 @@ public class TransactionActivity extends Activity {
 
     android.view.Window w = d.getWindow();
     if (w != null) {
+		w.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        w.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);        
         android.view.WindowManager.LayoutParams lp = w.getAttributes();
         lp.gravity = android.view.Gravity.CENTER;
         lp.y = 0;
