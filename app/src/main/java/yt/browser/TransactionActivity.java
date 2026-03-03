@@ -33,6 +33,12 @@ public class TransactionActivity extends Activity {
         }
     }
 
+    @Override
+    protected void onPause() {
+       super.onPause();
+       finishAndRemoveTask();
+    }
+
     private void showWelcomeDialog(final SharedPreferences prefs) {
         new AlertDialog.Builder(this)
                 .setTitle("Hello!")
