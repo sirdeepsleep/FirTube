@@ -72,6 +72,12 @@ public class MainActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
+        if (ZeroActivity.wait) {
+           Intent i = new Intent(this, SecurityActivity.class);
+           i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+           startActivity(i);
+           finishAndRemoveTask();
+        }
         keepBlocking = false;
         if (sharedWeb != null) {
             attachToUI();
