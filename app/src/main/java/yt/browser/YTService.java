@@ -8,7 +8,6 @@ import android.content.pm.ServiceInfo;
 import java.util.List;
 
 public class YTService extends Service {
-    static Context serviceContext;
 
     @Override
     public void onCreate() {
