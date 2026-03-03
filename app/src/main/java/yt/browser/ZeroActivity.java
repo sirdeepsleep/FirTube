@@ -27,6 +27,15 @@ public class ZeroActivity extends Activity {
         .setPositiveButton("YES [DISABLE]", (dialog, which) -> onConfirm.run())
         .setNegativeButton("CANCEL", null)
         .show();
+    android.view.Window w = d.getWindow();
+    if (w != null) {
+		w.addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        w.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);        
+        android.view.WindowManager.LayoutParams lp = w.getAttributes();
+        lp.gravity = android.view.Gravity.CENTER;
+        lp.y = 0;
+        w.setAttributes(lp);
+    }
     }
 
     @Override
