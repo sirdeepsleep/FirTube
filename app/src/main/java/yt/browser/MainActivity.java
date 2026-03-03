@@ -1,5 +1,7 @@
 package yt.browser;
 
+import android.app.ActivityManager;
+import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
