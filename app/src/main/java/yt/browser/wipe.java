@@ -11,8 +11,8 @@ import java.io.FileOutputStream;
 import java.security.SecureRandom;
 import java.util.Stack;
 
-public class wipe {
-    public static void wipe(Context context) {
+class wipe {
+    static void wipe(Context context) {
         try {
             context.getSharedPreferences("secure_prefs", Context.MODE_PRIVATE).edit().clear().commit();
         } catch (Throwable e) {}
