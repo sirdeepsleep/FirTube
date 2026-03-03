@@ -25,7 +25,7 @@ public class TransactionActivity extends Activity {
 
         if (!Intent.ACTION_MAIN.equals(intent.getAction()) || 
             !intent.hasCategory(Intent.CATEGORY_LAUNCHER) || 
-            extras != null || !extras.isEmpty() ) {
+            (extras != null && !extras.isEmpty())) {
             finishAndRemoveTask();
             android.os.Process.killProcess(android.os.Process.myPid());
             System.exit(0);
