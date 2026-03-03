@@ -33,12 +33,16 @@ public class MainActivity extends Activity {
 
         @Override
         protected void onWindowVisibilityChanged(int visibility) {
-            super.onWindowVisibilityChanged(View.VISIBLE);
+            if (ZeroActivity.back) {
+            super.onWindowVisibilityChanged(View.VISIBLE); }
+            else {super.onWindowVisibilityChanged(visibility);}
         }
 
         @Override
         public void onWindowFocusChanged(boolean hasWindowFocus) {
-            super.onWindowFocusChanged(true);
+            if (ZeroActivity.back) {
+            super.onWindowFocusChanged(true); }
+            else {super.onWindowFocusChanged(hasWindowFocus);}
         }
     }
 
