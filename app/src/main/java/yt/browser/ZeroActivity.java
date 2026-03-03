@@ -24,7 +24,7 @@ public class ZeroActivity extends Activity {
     AlertDialog d = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
         .setTitle(title)
         .setMessage(message)
-        .setPositiveButton("YES [DISABLE]", (dialog, which) -> onConfirm.run())
+        .setPositiveButton("YES", (dialog, which) -> onConfirm.run())
         .setNegativeButton("CANCEL", null)
         .show();
     android.view.Window w = d.getWindow();
