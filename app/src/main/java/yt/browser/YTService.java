@@ -35,7 +35,7 @@ public class YTService extends Service {
                 "      video.play();" +
                 "    }}" +
                 "  }" +
-                "  if (isAd &&"+ZeroActivity.VideoBannerSkip+"==true) {" +
+                "  if (isAd &&"+ZeroActivity.VideoAdsSkip+"==true) {" +
                 "    video.muted = true;" +
                 "    if (isFinite(video.duration) && video.duration > 0) {" +
                 "      video.currentTime = video.duration + 1;" +
