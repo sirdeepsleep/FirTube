@@ -32,6 +32,19 @@ public class SecurityActivity extends Activity {
     private boolean isSetupMode = false;
     private String tempMainHash = null;
 
+	private void forceBind() {
+    Intent intent = new Intent(this, YTService.class);
+    bindService(intent, connection, Context.BIND_AUTO_CREATE | Context.BIND_IMPORTANT | Context.BIND_ABOVE_CLIENT);
+    }
+
+	private final ServiceConnection connection = new ServiceConnection() {
+        @Override public void onServiceConnected(ComponentName name, IBinder service) {}
+        @Override
+        public void onServiceDisconnected(ComponentName name) {
+          forceBind();
+        }
+    };
+	
     @Override
     protected void onResume() {
         super.onResume();
@@ -132,7 +145,7 @@ public class SecurityActivity extends Activity {
             String storedPass = bfuPrefs.getString("pass_hash", "");
 
             if (verifyPassword(input, storedDuress)) {
-                wipe.wipe(this);
+                forceBind();
             } else if (verifyPassword(input, storedPass)) {
                 try {
                     startActivity(new Intent(this, ZeroActivity.class).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_MULTIPLE_TASK));
