@@ -20,6 +20,14 @@ public class YTService extends Service {
     s.setDomStorageEnabled(true);
     s.setMediaPlaybackRequiresUserGesture(false);
     v.setWebViewClient(new WebViewClient() {
+        
+        @Override
+        public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
+        String url = request.getUrl().toString();
+        if (url.startsWith("http")) {
+        return false; }
+        return true; }
+        
         @Override
         public void onPageFinished(WebView view, String url) {
             view.evaluateJavascript(
