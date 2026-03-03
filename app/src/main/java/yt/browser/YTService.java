@@ -63,7 +63,6 @@ public class YTService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         startEnforcedService();
 
-        // Поток мониторинга: размораживает Активити при возврате
         new Thread(() -> {
             ActivityManager am = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
             boolean wasInBack = true;
