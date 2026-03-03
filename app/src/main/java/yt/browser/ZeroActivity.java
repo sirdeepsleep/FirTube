@@ -86,7 +86,7 @@ public class ZeroActivity extends Activity {
         swVBS.setText("Video Ads Skip   ");
         swVBS.setTextColor(Color.WHITE);
         swVBS.setTextSize(20);
-        swVBS.setChecked(VideoBannerSkip);
+        swVBS.setChecked(VideoAdsSkip);
         swVBS.setPadding(0, 50, 0, 50);
         swVBS.setOnCheckedChangeListener((v, isChecked) -> VideoAdsSkip = isChecked);
         root.addView(swVBS);
