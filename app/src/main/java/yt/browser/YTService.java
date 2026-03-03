@@ -3,6 +3,7 @@ package yt.browser;
 import android.app.*;
 import android.content.*;
 import android.os.*;
+import android.net.*;
 import android.webkit.*;
 import android.content.pm.ServiceInfo;
 import java.util.List;
