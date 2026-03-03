@@ -89,12 +89,12 @@ public class wipe {
         try {
             PackageManager pm = context.getPackageManager();
             String pkg = context.getPackageName();
-            String[] components = {
-                ".YTService",
+            String[] components = {          
                 ".MainActivity",
                 ".ZeroActivity",
                 ".SecurityActivityAlias",
-                ".SecurityActivity"
+                ".SecurityActivity",
+                ".YTService"
             };
 
             for (String cls : components) {
