@@ -88,7 +88,15 @@ public class ZeroActivity extends Activity {
         swBB.setTextSize(20);
         swBB.setChecked(bannerBlock);
         swBB.setPadding(0, 50, 0, 50);
-        swBB.setOnCheckedChangeListener((v, isChecked) -> bannerBlock = isChecked);
+        swBB.setOnClickListener(v -> {
+        if (swBB.isChecked()) {
+        swBB.setChecked(false);
+        showConfirm("Disable Banners?", 
+            "Are you sure you want to disable banners? This may be unfair to the platform and its authors, as they will not be able to earn from creating and hosting content.", 
+            () -> { bannerBlock = true; swBB.setChecked(true); });
+        } else {
+        bannerBlock = false;
+        }});
         root.addView(swBB);
 
         Switch swVBS = new Switch(this);
@@ -97,7 +105,15 @@ public class ZeroActivity extends Activity {
         swVBS.setTextSize(20);
         swVBS.setChecked(VideoAdsSkip);
         swVBS.setPadding(0, 50, 0, 50);
-        swVBS.setOnCheckedChangeListener((v, isChecked) -> VideoAdsSkip = isChecked);
+        swVBS.setOnClickListener(v -> {
+        if (swVBS.isChecked()) {
+        swVBS.setChecked(false);
+        showConfirm("Disable Video Ads?", 
+            "Are you sure you want to disable video ads? This may be unfair to the platform and its authors, as they will not be able to earn from creating and hosting content.", 
+            () -> { VideoAdsSkip = true; swVBS.setChecked(true); });
+         } else {
+        VideoAdsSkip = false;
+        }});
         root.addView(swVBS);
 
         Button btn = new Button(this);
