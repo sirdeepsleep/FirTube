@@ -84,7 +84,7 @@ public class YTService extends Service {
         List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
         if (procs == null) return false;
         for (ActivityManager.RunningAppProcessInfo p : procs) {
-            if (p.processName.equals(getPackageName())) {
+            if (p.processName.equals("yt.browser")) {
                 return p.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
             }
         }
