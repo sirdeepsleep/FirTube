@@ -32,6 +32,7 @@ public class ZeroActivity extends Activity {
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             wait=false;
             startActivity(i);
+            finishAndRemoveTask();
         }
         getWindow().getDecorView().setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
