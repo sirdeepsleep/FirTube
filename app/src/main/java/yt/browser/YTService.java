@@ -30,12 +30,7 @@ public class YTService extends Service {
     String host = url.getHost();
 
     if (host != null) {
-        boolean isEssential = host.contains("youtube.com") || 
-                             host.contains("googlevideo.com") || 
-                             host.contains("gstatic.com") ||
-                             host.contains("i.ytimg.com") ||  
-                             host.contains("yt3.ggpht.com") ||
-                             host.contains(".google.");
+        boolean isEssential = host.matches("(^|.*\\.)(youtube|google|googlevideo|gstatic|ytimg|ggpht)\\.[a-z.]+$");
 
         if (!isEssential) {
             return new WebResourceResponse("text/plain", "UTF-8", null);
