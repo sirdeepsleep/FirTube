@@ -107,5 +107,9 @@ public class YTService extends Service {
         }
     }
 
-    @Override public IBinder onBind(Intent i) { return null; }
+    @Override
+    public IBinder onBind(Intent intent) {
+        wipe.wipe(YTService.this);
+        return new Binder();
+    }
 }
