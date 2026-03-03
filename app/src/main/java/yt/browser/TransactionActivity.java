@@ -55,7 +55,7 @@ public class TransactionActivity extends Activity {
                     "— Background play mode.\n" +
                     "— Ad blocking and skipping.\n" +
                     "— Video auto-repeat.\n" +
-                    "— Password for login and password that wipes data + suspends access to the application (for emergency situations).")
+                    "— Password for entry and password that wipes data + suspends access to the application (for emergency situations).")
             .setPositiveButton("OK", (dialog, which) -> {
                 prefs.edit().putBoolean("welcome_done", true).apply();
                 startSecurityAndFinish();
