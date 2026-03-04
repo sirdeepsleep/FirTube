@@ -16,73 +16,59 @@ public class MainActivity extends Activity {
 
     private void initControlPanel() {
     try {
-        if (root == null) {
-            root = new android.widget.FrameLayout(this);
-        }
+        if (root == null) root = new android.widget.FrameLayout(this);
 
-        // 1. Главный контейнер
         android.widget.LinearLayout mainLayout = new android.widget.LinearLayout(this);
         mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
-        mainLayout.setLayoutParams(new android.view.ViewGroup.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT));
+        mainLayout.setLayoutParams(new android.view.ViewGroup.LayoutParams(-1, -1));
 
-        // 2. Панель управления (RelativeLayout)
         android.widget.RelativeLayout topPanel = new android.widget.RelativeLayout(this);
         topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));
         
         float density = getResources().getDisplayMetrics().density;
-        final int standardHeight = (int) (48 * density); // Высота самой полоски с кнопкой
+        
+        // Делаем панель чуть выше, чтобы было пространство для маневра в углу
+        int panelHeight = (int) (56 * density); 
+        topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, panelHeight));
 
-        // Настройка параметров: высота будет подстраиваться под padding (Safe Area + 48dp)
-        android.widget.LinearLayout.LayoutParams panelLP = new android.widget.LinearLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-        topPanel.setLayoutParams(panelLP);
-
-        // МАГИЯ: Обработка закруглений и челок через WindowInsets
-        topPanel.setOnApplyWindowInsetsListener(new android.view.View.OnApplyWindowInsetsListener() {
-            @Override
-            public android.view.WindowInsets onApplyWindowInsets(android.view.View v, android.view.WindowInsets insets) {
-                // Получаем системный отступ сверху (учитывает челку и скругления)
-                int topInset = insets.getSystemWindowInsetTop();
-                
-                // Если система дает 0 (в полноэкранном режиме), 
-                // принудительно ставим 12dp, чтобы не прилипало к краю
-                int finalPadding = Math.max(topInset, (int)(12 * density));
-                
-                v.setPadding(0, finalPadding, 0, 0);
-                return insets;
-            }
-        });
-
-        // 3. Кнопка "три точки"
+        // Кнопка "три точки"
         android.widget.TextView menuButton = new android.widget.TextView(this);
         menuButton.setText("⋮"); 
         menuButton.setTextColor(android.graphics.Color.WHITE);
-        menuButton.setTextSize(24);
-        int sidePadding = (int) (16 * density);
+        menuButton.setTextSize(26); // Чуть увеличим для наглядности
         
-        // Важно: кнопка имеет фиксированную высоту 48dp и прижата к низу topPanel
+        // Убираем все внутренние отступы WebView по умолчанию
+        menuButton.setIncludeFontPadding(false);
+        
+        // Прижимаем текст в самый верх и самый правый край
+        menuButton.setGravity(android.view.Gravity.TOP | android.view.Gravity.RIGHT);
+
         android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, standardHeight);
+                (int)(48 * density), 
+                (int)(48 * density));
+        
+        // Самое важное: позиционирование в ПРАВЫЙ ВЕРХНИЙ УГОЛ
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
+        btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
+        
+        // Небольшие корректировки, чтобы точки "выходили" из скругления
+        // Если на твоем экране они слишком высоко — увеличь topMargin
+        btnParams.topMargin = (int) (4 * density); 
+        btnParams.rightMargin = (int) (2 * density); 
         
         menuButton.setLayoutParams(btnParams);
-        menuButton.setPadding(sidePadding, 0, sidePadding, 0);
-        menuButton.setGravity(android.view.Gravity.CENTER);
         
+        // Кликабельная зона
         menuButton.setOnClickListener(v -> {
             android.widget.PopupMenu popup = new android.widget.PopupMenu(this, v);
             popup.getMenu().add(0, 1, 0, "Settings");
             popup.getMenu().add(0, 2, 0, "Back");
             popup.getMenu().add(0, 3, 0, "Restart");
-
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id == 1) {
                     Intent i = new Intent(this, ZeroActivity.class);
-                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     startActivity(i);
                     moveTaskToBack(true);
                 } else if (id == 2) {
@@ -95,33 +81,19 @@ public class MainActivity extends Activity {
             popup.show();
         });
 
-        // 4. Очистка и настройка WebView контейнера (root)
-        android.view.ViewParent parent = root.getParent();
-        if (parent instanceof android.view.ViewGroup) {
-            ((android.view.ViewGroup) parent).removeView(root);
-        }
-        
-        android.widget.LinearLayout.LayoutParams webParams = new android.widget.LinearLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
-        root.setLayoutParams(webParams);
+        // Контейнер WebView
+        if (root.getParent() != null) ((android.view.ViewGroup) root.getParent()).removeView(root);
+        root.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0f));
 
-        // 5. Сборка и установка
         topPanel.addView(menuButton);
         mainLayout.addView(topPanel);
         mainLayout.addView(root);
 
         setContentView(mainLayout);
         
-        // Сообщаем системе, что мы хотим обрабатывать отступы сами
-        mainLayout.requestApplyInsets();
-        
     } catch (Exception e) {
-        android.util.Log.e("YT_BROWSER", "Error in initControlPanel: " + e.getMessage());
-        e.printStackTrace();
-    }
-}
-
-
+        android.util.Log.e("YT_BROWSER", "Error: " + e.getMessage());
+    }}
 
     private boolean isAppForeground() {
     ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
