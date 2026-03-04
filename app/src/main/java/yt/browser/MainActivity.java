@@ -16,26 +16,31 @@ public class MainActivity extends Activity {
 
     private void initControlPanel() {
     try {
-        // 1. Убеждаемся, что root существует (если вы еще не создали его в onCreate)
         if (root == null) {
             root = new android.widget.FrameLayout(this);
         }
 
-        // 2. Создаем главный вертикальный стек
         android.widget.LinearLayout mainLayout = new android.widget.LinearLayout(this);
         mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
         mainLayout.setLayoutParams(new android.view.ViewGroup.LayoutParams(
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 
-        // 3. Создаем панель управления
         android.widget.RelativeLayout topPanel = new android.widget.RelativeLayout(this);
+        
+        int statusBarHeight = 0;
+        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
+        }
         int panelHeight = (int) (48 * getResources().getDisplayMetrics().density);
+        
         topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, panelHeight));
-        topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, panelHeight + statusBarHeight));
+        
+        topPanel.setPadding(0, statusBarHeight, 0, 0);
+        topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));      
 
-        // Кнопка "три точки"
         android.widget.TextView menuButton = new android.widget.TextView(this);
         menuButton.setText("⋮"); 
         menuButton.setTextColor(android.graphics.Color.WHITE);
@@ -63,7 +68,7 @@ public class MainActivity extends Activity {
                     i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     startActivity(i);
                     moveTaskToBack(true);
-                  } else if (id == 2) {
+                } else if (id == 2) {
                     if (sharedWeb != null && sharedWeb.canGoBack()) sharedWeb.goBack();
                 } else if (id == 3) {
                     if (sharedWeb != null) sharedWeb.reload();
@@ -73,30 +78,26 @@ public class MainActivity extends Activity {
             popup.show();
         });
 
-        // 4. Безопасное перемещение root
         android.view.ViewParent parent = root.getParent();
         if (parent instanceof android.view.ViewGroup) {
             ((android.view.ViewGroup) parent).removeView(root);
         }
         
-        // Настройка параметров для WebView контейнера
         android.widget.LinearLayout.LayoutParams webParams = new android.widget.LinearLayout.LayoutParams(
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
         root.setLayoutParams(webParams);
 
-        // 5. Сборка
         topPanel.addView(menuButton);
         mainLayout.addView(topPanel);
         mainLayout.addView(root);
 
-        // 6. Установка итогового View
         setContentView(mainLayout);
         
     } catch (Exception e) {
-        android.util.Log.e("YT_BROWSER", "Error in initControlPanel: " + e.getMessage());
-        e.printStackTrace();
+        
     }
-}
+    }
+
 
     private boolean isAppForeground() {
     ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
