@@ -27,42 +27,40 @@ public class MainActivity extends Activity {
         
         android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
         float density = dm.density;
-        
-        // Высота панели
-        int panelHeight = (int) (52 * density); 
+
+        // --- ГЕОМЕТРИЯ СКРУГЛЕНИЯ ---
+        int cornerRadius = (int) (16 * density); // Дефолтное значение X и Y
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            // Пытаемся получить реальный радиус скругления дисплея (X)
+            android.view.RoundedCorner topCorner = getWindowManager().getDefaultDisplay()
+                    .getRoundedCorner(android.view.RoundedCorner.POSITION_TOP_RIGHT);
+            if (topCorner != null) {
+                cornerRadius = topCorner.getRadius();
+            }
+        }
+
+        // Точка X: Панель высотой ровно до места, где заканчивается закругление
+        int panelHeight = cornerRadius; 
         topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, panelHeight));
 
         // Кнопка "три точки"
         android.widget.TextView menuButton = new android.widget.TextView(this);
         menuButton.setText("⋮"); 
         menuButton.setTextColor(android.graphics.Color.WHITE);
-        menuButton.setTextSize(26);
+        menuButton.setTextSize(22); // Размер подбираем, чтобы влезло в угол
         menuButton.setIncludeFontPadding(false);
-        
-        // ВАЖНО: Прижимаем текст вправо и вверх внутри вьюхи
-        menuButton.setGravity(android.view.Gravity.TOP | android.view.Gravity.RIGHT);
+        menuButton.setGravity(android.view.Gravity.CENTER);
 
-        // Контейнер кнопки побольше, чтобы было проще попасть пальцем
-        int btnWidth = (int) (40 * density);
-        int btnHeight = (int) (40 * density);
-        android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(btnWidth, btnHeight);
+        // Кнопка размером ровно под квадрат в углу (X на X)
+        // Точка Y: Это край этого квадрата по горизонтали
+        android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(
+                cornerRadius, cornerRadius);
         
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
-
-        // --- РАБОТА С ИЗГИБОМ УГЛА ---
-        // Эти значения выставляют точки ровно на границу видимости.
-        // Если точки всё еще "прячутся" — увеличивай эти числа на 2-3 единицы.
-        int safeRight = (int) (6 * density); // Отступ от правого физического края
-        int safeTop = (int) (4 * density);   // Отступ от верхнего физического края
-
-        btnParams.rightMargin = safeRight;
-        btnParams.topMargin = safeTop;
-
-        menuButton.setLayoutParams(btnParams);
         
-        // Убираем внутренние зазоры самой TextView, чтобы символ ⋮ был в самом углу контейнера
-        menuButton.setPadding(0, 0, 0, 0);
+        menuButton.setLayoutParams(btnParams);
         
         menuButton.setOnClickListener(v -> {
             android.widget.PopupMenu popup = new android.widget.PopupMenu(this, v);
@@ -86,6 +84,7 @@ public class MainActivity extends Activity {
             popup.show();
         });
 
+        // Контейнер WebView
         if (root.getParent() != null) ((android.view.ViewGroup) root.getParent()).removeView(root);
         root.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0f));
 
@@ -99,6 +98,7 @@ public class MainActivity extends Activity {
         android.util.Log.e("YT_BROWSER", "Error: " + e.getMessage());
     }
 }
+
 
 
 
