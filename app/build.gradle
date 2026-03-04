@@ -24,8 +24,14 @@ buildTypes {
         shrinkResources false  
          }  
 }
+        externalNativeBuild {
+        cmake {
+            path "src/main/cpp/CMakeLists.txt"
+        }
+    }
 
 }
+
 
 dependencies {
 implementation 'org.bouncycastle:bcprov-jdk15on:1.70'
