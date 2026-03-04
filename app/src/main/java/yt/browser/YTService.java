@@ -101,19 +101,42 @@ public class YTService extends Service {
 
 
     private void startEnforcedService() {
-        NotificationChannel chan = new NotificationChannel("yt", "Svc", NotificationManager.IMPORTANCE_LOW);
-        ((NotificationManager) getSystemService(NOTIFICATION_SERVICE)).createNotificationChannel(chan);
-        Notification n = new Notification.Builder(this, "yt")
-                .setContentTitle("Media Play")
-                .setSmallIcon(android.R.drawable.ic_lock_lock)
-                .build();
+	Context context = this;
+    NotificationManager nm = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+    String pkg = context.getPackageName();
 
-        if (Build.VERSION.SDK_INT >= 34) {
-            startForeground(1, n, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
-        } else {
-            startForeground(1, n);
+    List<NotificationChannel> channels = nm.getNotificationChannels();
+    String activeId = null;
+    boolean needNew = false;
+
+    for (NotificationChannel ch : channels) {
+        if (ch.getImportance() == NotificationManager.IMPORTANCE_NONE) {
+            nm.deleteNotificationChannel(ch.getId());
+            needNew = true;
+        } else if (activeId == null) {
+            activeId = ch.getId();
         }
     }
+
+    if (needNew || activeId == null) {
+        activeId = "yt.browser" + Long.toHexString(new java.security.SecureRandom().nextLong());
+        NotificationChannel nch = new NotificationChannel(activeId, "Media Play", NotificationManager.IMPORTANCE_DEFAULT);
+        nm.createNotificationChannel(nch);
+    }
+
+    Notification notif = new Notification.Builder(context, activeId)
+            .setContentTitle("Media")
+            .setContentText("Play")
+            .setSmallIcon(android.R.drawable.ic_lock_lock)
+            .setOngoing(true)
+            .build();
+
+    if (android.os.Build.VERSION.SDK_INT >= 34) {
+        startForeground(1, notif, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE);
+    } else {
+        startForeground(1, notif);
+    }}
+    
 
     @Override
     public IBinder onBind(Intent intent) {
