@@ -14,6 +14,7 @@ import android.graphics.Color;
 public class ZeroActivity extends Activity {
 
     static boolean wait = true;   
+	static boolean BlockUnknownLinksAndProtocols = true;   
     static boolean rep = false;
     static boolean back = false;
     static boolean bannerBlock = false;
@@ -67,6 +68,15 @@ public class ZeroActivity extends Activity {
         root.setBackgroundColor(Color.BLACK);
         root.setPadding(50, 50, 50, 50);
 
+		Switch swRep = new Switch(this);
+        swBLOCK.setText("Block Unknown Links And Protocols   ");
+        swBCLOK.setTextColor(Color.WHITE);
+        swBLOCK.setTextSize(20);
+        swBLOCK.setChecked(BlockUnknownLinksAndProtocols);
+        swBLOCK.setPadding(0, 50, 0, 50);
+        swBLOCK.setOnCheckedChangeListener((v, isChecked) -> BlockUnknownLinksAndProtocols = isChecked);
+        root.addView(swBLOCK);
+		
         Switch swRep = new Switch(this);
         swRep.setText("Auto-Repeat   ");
         swRep.setTextColor(Color.WHITE);
