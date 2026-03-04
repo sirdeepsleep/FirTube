@@ -57,7 +57,7 @@ public class ZeroActivity extends Activity {
     protected void onPause() {
         super.onPause(); 
           if (!isAppForeground()) {
-        ZeroActivity.wait = true;
+           wait = true;
           }
 		finishAndRemoveTask();
 	}
