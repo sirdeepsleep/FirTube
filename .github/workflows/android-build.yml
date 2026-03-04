@@ -20,18 +20,14 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      # 1. Устанавливаем Rust и нужные архитектуры (32 и 64 бит)
       - name: Set up Rust
         uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android, armv7-linux-androideabi, x86_64-linux-android
 
-      # 2. Устанавливаем cargo-ndk (он связывает Rust с Android NDK)
       - name: Install cargo-ndk
         run: cargo install cargo-ndk
 
-      # 3. Собираем Rust либу под все процессоры
-      # Мы копируем результат в jniLibs, чтобы Gradle сам их увидел
       - name: Build Rust Native Library
         run: |
           cd app/src/main/rust
@@ -46,7 +42,6 @@ jobs:
       - name: Grant execute permission for Gradle wrapper
         run: chmod +x gradlew
 
-      # 4. Собираем APK (теперь он подхватит скомпилированный Rust)
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
