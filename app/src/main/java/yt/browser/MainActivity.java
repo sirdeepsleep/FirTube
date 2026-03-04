@@ -20,22 +20,18 @@ public class MainActivity extends Activity {
             root = new android.widget.FrameLayout(this);
         }
 
-        // 1. Основной вертикальный контейнер
         android.widget.LinearLayout mainLayout = new android.widget.LinearLayout(this);
         mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
         mainLayout.setLayoutParams(new android.view.ViewGroup.LayoutParams(
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 
-        // 2. Настройка геометрии (Твоя формула: X и Y)
         android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
         float density = dm.density;
 
-        // "Виртуальный сантиметр" (32dp — комфортный минимум для пальца и визуала)
         int safeMarginPx = (int) (32 * density); 
         int cornerRadius = 0;
 
-        // Пытаемся получить реальное физическое скругление X
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
             android.view.RoundedCorner topCorner = getWindowManager().getDefaultDisplay()
                     .getRoundedCorner(android.view.RoundedCorner.POSITION_TOP_RIGHT);
@@ -44,16 +40,13 @@ public class MainActivity extends Activity {
             }
         }
 
-        // Итоговая величина X и Y: берем максимум из физики и "сантиметра"
         int finalXY = Math.max(cornerRadius, safeMarginPx);
 
-        // 3. Создаем панель управления высотой X
         android.widget.RelativeLayout topPanel = new android.widget.RelativeLayout(this);
         topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));
         topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, finalXY));
 
-        // 4. Кнопка "три точки" внутри прямого угла (квадрат XY на XY)
         android.widget.TextView menuButton = new android.widget.TextView(this);
         menuButton.setText("⋮"); 
         menuButton.setTextColor(android.graphics.Color.WHITE);
@@ -90,7 +83,6 @@ public class MainActivity extends Activity {
             popup.show();
         });
 
-        // 5. Привязка WebView (root)
         android.view.ViewParent parent = root.getParent();
         if (parent instanceof android.view.ViewGroup) {
             ((android.view.ViewGroup) parent).removeView(root);
@@ -100,7 +92,6 @@ public class MainActivity extends Activity {
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
         root.setLayoutParams(webParams);
 
-        // 6. Сборка UI
         topPanel.addView(menuButton);
         mainLayout.addView(topPanel);
         mainLayout.addView(root);
@@ -150,7 +141,6 @@ public class MainActivity extends Activity {
         super.onCreate(b);
         root = new FrameLayout(this);
         initControlPanel(); 
-        //setContentView(root);
         
         if (sharedWeb == null) {
             sharedWeb = new MyWebView(getApplicationContext());
