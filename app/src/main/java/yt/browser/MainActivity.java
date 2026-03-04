@@ -120,6 +120,7 @@ public class MainActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(b);
         root = new FrameLayout(this);
+        initControlPanel(); 
         setContentView(root);
         
         if (sharedWeb == null) {
