@@ -15,8 +15,6 @@ pub extern "system" fn Java_yt_browser_SecurityActivity_argonHash(
 ) -> jstring {
     let input_str: String = env.get_string(&input).expect("Couldn't get java string!").into();
 
-    // Настройка параметров: 512MB RAM, 3 итерации, 4 потока (parallelism)
-    // 512 * 1024 = 524288 KB
     let params = Params::new(524288, 3, 4, None).expect("Invalid params");
     let argon2 = Argon2::new(argon2::Algorithm::Argon2id, argon2::Version::V0x13, params);
     
@@ -44,7 +42,6 @@ pub extern "system" fn Java_yt_browser_SecurityActivity_argonVerify(
         Err(_) => return 0,
     };
 
-    // При верификации параметры (RAM, итерации) извлекаются автоматически из строки хэша
     let is_valid = Argon2::default()
         .verify_password(input_str.as_bytes(), &parsed_hash)
         .is_ok();
