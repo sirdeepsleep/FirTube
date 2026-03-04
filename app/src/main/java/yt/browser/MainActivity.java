@@ -20,40 +20,57 @@ public class MainActivity extends Activity {
             root = new android.widget.FrameLayout(this);
         }
 
+        // 1. Главный контейнер
         android.widget.LinearLayout mainLayout = new android.widget.LinearLayout(this);
         mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
         mainLayout.setLayoutParams(new android.view.ViewGroup.LayoutParams(
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 
+        // 2. Панель управления (RelativeLayout)
         android.widget.RelativeLayout topPanel = new android.widget.RelativeLayout(this);
+        topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));
         
-        int statusBarHeight = 0;
-        int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
-        if (resourceId > 0) {
-            statusBarHeight = getResources().getDimensionPixelSize(resourceId);
-        }
-        int panelHeight = (int) (48 * getResources().getDisplayMetrics().density);
-        
-        topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, panelHeight + statusBarHeight));
-        
-        topPanel.setPadding(0, statusBarHeight, 0, 0);
-        topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));      
+        float density = getResources().getDisplayMetrics().density;
+        final int standardHeight = (int) (48 * density); // Высота самой полоски с кнопкой
 
+        // Настройка параметров: высота будет подстраиваться под padding (Safe Area + 48dp)
+        android.widget.LinearLayout.LayoutParams panelLP = new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        topPanel.setLayoutParams(panelLP);
+
+        // МАГИЯ: Обработка закруглений и челок через WindowInsets
+        topPanel.setOnApplyWindowInsetsListener(new android.view.View.OnApplyWindowInsetsListener() {
+            @Override
+            public android.view.WindowInsets onApplyWindowInsets(android.view.View v, android.view.WindowInsets insets) {
+                // Получаем системный отступ сверху (учитывает челку и скругления)
+                int topInset = insets.getSystemWindowInsetTop();
+                
+                // Если система дает 0 (в полноэкранном режиме), 
+                // принудительно ставим 12dp, чтобы не прилипало к краю
+                int finalPadding = Math.max(topInset, (int)(12 * density));
+                
+                v.setPadding(0, finalPadding, 0, 0);
+                return insets;
+            }
+        });
+
+        // 3. Кнопка "три точки"
         android.widget.TextView menuButton = new android.widget.TextView(this);
         menuButton.setText("⋮"); 
         menuButton.setTextColor(android.graphics.Color.WHITE);
         menuButton.setTextSize(24);
-        int padding = (int) (16 * getResources().getDisplayMetrics().density);
-        menuButton.setPadding(padding, 0, padding, 0);
-        menuButton.setGravity(android.view.Gravity.CENTER);
-
+        int sidePadding = (int) (16 * density);
+        
+        // Важно: кнопка имеет фиксированную высоту 48dp и прижата к низу topPanel
         android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, 
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT);
+                android.view.ViewGroup.LayoutParams.WRAP_CONTENT, standardHeight);
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
+        
         menuButton.setLayoutParams(btnParams);
+        menuButton.setPadding(sidePadding, 0, sidePadding, 0);
+        menuButton.setGravity(android.view.Gravity.CENTER);
         
         menuButton.setOnClickListener(v -> {
             android.widget.PopupMenu popup = new android.widget.PopupMenu(this, v);
@@ -78,6 +95,7 @@ public class MainActivity extends Activity {
             popup.show();
         });
 
+        // 4. Очистка и настройка WebView контейнера (root)
         android.view.ViewParent parent = root.getParent();
         if (parent instanceof android.view.ViewGroup) {
             ((android.view.ViewGroup) parent).removeView(root);
@@ -87,16 +105,22 @@ public class MainActivity extends Activity {
                 android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
         root.setLayoutParams(webParams);
 
+        // 5. Сборка и установка
         topPanel.addView(menuButton);
         mainLayout.addView(topPanel);
         mainLayout.addView(root);
 
         setContentView(mainLayout);
         
-    } catch (Exception e) {
+        // Сообщаем системе, что мы хотим обрабатывать отступы сами
+        mainLayout.requestApplyInsets();
         
+    } catch (Exception e) {
+        android.util.Log.e("YT_BROWSER", "Error in initControlPanel: " + e.getMessage());
+        e.printStackTrace();
     }
-    }
+}
+
 
 
     private boolean isAppForeground() {
