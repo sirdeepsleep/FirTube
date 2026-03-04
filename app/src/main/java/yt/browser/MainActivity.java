@@ -147,7 +147,7 @@ public class MainActivity extends Activity {
             YTService.setupWebStatic(sharedWeb);
         }
         attachToUI();
-        startService(new Intent(this, YTService.class));
+        startForegroundService(new Intent(this, YTService.class));
     }
 
     private void attachToUI() {
