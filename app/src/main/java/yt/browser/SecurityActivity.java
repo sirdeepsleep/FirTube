@@ -163,35 +163,26 @@ public class SecurityActivity extends Activity {
         passwordInput.setText("");
     }
 
-    private String hashPassword(String password) {
-        byte[] salt = new byte[16];
-        new SecureRandom().nextBytes(salt);
-        byte[] result = new byte[32];
-        Argon2Parameters params = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
-                .withSalt(salt)
-                .withParallelism(1)
-                .withMemoryAsKB(73728) 
-                .withIterations(5)
-                .build();
-        Argon2BytesGenerator gen = new Argon2BytesGenerator();
-        gen.init(params);
-        gen.generateBytes(password.getBytes(StandardCharsets.UTF_8), result);
-        return Base64.encodeToString(salt, Base64.NO_WRAP) + ":" + Base64.encodeToString(result, Base64.NO_WRAP);
+
+    static {
+        System.loadLibrary("argon_security");
     }
 
-    private boolean verifyPassword(String input, String record) {
-        if (record == null || !record.contains(":")) return false;
-        try {
-            String[] parts = record.split(":");
-            byte[] salt = Base64.decode(parts[0], Base64.NO_WRAP);
-            byte[] stored = Base64.decode(parts[1], Base64.NO_WRAP);
-            byte[] test = new byte[32];
-            Argon2Parameters params = new Argon2Parameters.Builder(Argon2Parameters.ARGON2_id)
-                    .withSalt(salt).withParallelism(1).withMemoryAsKB(73728).withIterations(5).build();
-            Argon2BytesGenerator gen = new Argon2BytesGenerator();
-            gen.init(params);
-            gen.generateBytes(input.getBytes(StandardCharsets.UTF_8), test);
-            return MessageDigest.isEqual(test, stored);
-        } catch (Exception e) { return false; }
+    // Объявление нативных методов
+    private native String argonHash(String password);
+    private native boolean argonVerify(String input, String hash);
+
+    // Замените ваш старый hashPassword
+    private String hashPassword(String password) {
+        return argonHash(password);
     }
+
+    // Замените ваш старый verifyPassword
+    private boolean verifyPassword(String input, String record) {
+        if (record == null || record.isEmpty()) return false;
+        return argonVerify(input, record);
+    }
+
+
+    
 }
