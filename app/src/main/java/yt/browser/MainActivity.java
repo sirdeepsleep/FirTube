@@ -14,6 +14,7 @@ public class MainActivity extends Activity {
     static WebView sharedWeb;
     private FrameLayout root;
 
+
     private void initControlPanel() {
     try {
         if (root == null) root = new android.widget.FrameLayout(this);
@@ -25,9 +26,10 @@ public class MainActivity extends Activity {
         android.widget.RelativeLayout topPanel = new android.widget.RelativeLayout(this);
         topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));
         
-        float density = getResources().getDisplayMetrics().density;
+        android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
+        float density = dm.density;
         
-        // Делаем панель чуть выше, чтобы было пространство для маневра в углу
+        // Высота панели. Сделаем чуть больше, чтобы влез закругленный угол
         int panelHeight = (int) (56 * density); 
         topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, panelHeight));
 
@@ -35,30 +37,38 @@ public class MainActivity extends Activity {
         android.widget.TextView menuButton = new android.widget.TextView(this);
         menuButton.setText("⋮"); 
         menuButton.setTextColor(android.graphics.Color.WHITE);
-        menuButton.setTextSize(26); // Чуть увеличим для наглядности
-        
-        // Убираем все внутренние отступы WebView по умолчанию
+        menuButton.setTextSize(26);
         menuButton.setIncludeFontPadding(false);
-        
-        // Прижимаем текст в самый верх и самый правый край
-        menuButton.setGravity(android.view.Gravity.TOP | android.view.Gravity.RIGHT);
+        menuButton.setGravity(android.view.Gravity.CENTER); // Центруем внутри самой кнопки
 
-        android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(
-                (int)(48 * density), 
-                (int)(48 * density));
-        
-        // Самое важное: позиционирование в ПРАВЫЙ ВЕРХНИЙ УГОЛ
+        // Размер контейнера самой кнопки (чтобы область нажатия была нормальной)
+        int btnSize = (int) (44 * density);
+        android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(btnSize, btnSize);
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
-        
-        // Небольшие корректировки, чтобы точки "выходили" из скругления
-        // Если на твоем экране они слишком высоко — увеличь topMargin
+
+        // --- РАСЧЕТ РЕАЛЬНЫХ ПИКСЕЛЕЙ ДЛЯ УГЛА ---
+        // Если Android 12+, пытаемся получить радиус скругления программно
+        int cornerOffset = (int) (12 * density); // Дефолт для средних скруглений
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+            android.view.RoundedCorner corner = getWindowManager().getDefaultDisplay().getRoundedCorner(android.view.RoundedCorner.POSITION_TOP_RIGHT);
+            if (corner != null) {
+                // Берем радиус и добавляем пару пикселей "запаса", чтобы не липло впритык
+                cornerOffset = corner.getRadius() + (int)(2 * density);
+            }
+        }
+
+        // Выставляем маржины так, чтобы точки были СРАЗУ после закругления
+        // По рисунку: точки должны быть в самой верхней правой видимой части
         btnParams.topMargin = (int) (4 * density); 
-        btnParams.rightMargin = (int) (2 * density); 
         
+        // Магия тут: отступаем справа ровно столько, сколько съедает скругление
+        // Если они все еще "за экраном", увеличь этот множитель (например 0.4 -> 0.6)
+        int rightMarginPx = (int) (cornerOffset * 0.4f); 
+        btnParams.rightMargin = rightMarginPx;
+
         menuButton.setLayoutParams(btnParams);
         
-        // Кликабельная зона
         menuButton.setOnClickListener(v -> {
             android.widget.PopupMenu popup = new android.widget.PopupMenu(this, v);
             popup.getMenu().add(0, 1, 0, "Settings");
@@ -81,7 +91,6 @@ public class MainActivity extends Activity {
             popup.show();
         });
 
-        // Контейнер WebView
         if (root.getParent() != null) ((android.view.ViewGroup) root.getParent()).removeView(root);
         root.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0f));
 
@@ -93,7 +102,9 @@ public class MainActivity extends Activity {
         
     } catch (Exception e) {
         android.util.Log.e("YT_BROWSER", "Error: " + e.getMessage());
-    }}
+    }
+}
+
 
     private boolean isAppForeground() {
     ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
