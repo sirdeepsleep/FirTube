@@ -132,6 +132,7 @@ public class ZeroActivity extends Activity {
         btn.setBackgroundColor(Color.RED);
         btn.setTextColor(Color.WHITE);
         btn.setOnClickListener(v -> {
+			YTService.injectLogic(MainActivity.sharedWeb);
             Intent i = new Intent(this, MainActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
             wait=false;
