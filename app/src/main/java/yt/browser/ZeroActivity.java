@@ -10,6 +10,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.graphics.Color;
+import android.app.ActivityManager;
+import android.content.Context;
 
 public class ZeroActivity extends Activity {
 
