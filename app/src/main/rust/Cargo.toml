@@ -1,0 +1,15 @@
+[package]
+name = "argon_security"
+version = "0.1.0"
+edition = "2021"
+
+[lib]
+crate-type = ["cdylib"]
+
+[dependencies]
+# Основная библиотека Argon2
+argon2 = { version = "0.5", features = ["std"] }
+# Для генерации соли
+rand = "0.8"
+# JNI биндинги
+jni = "0.21"
