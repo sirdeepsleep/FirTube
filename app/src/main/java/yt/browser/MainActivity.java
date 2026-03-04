@@ -14,7 +14,6 @@ public class MainActivity extends Activity {
     static WebView sharedWeb;
     private FrameLayout root;
 
-
     private void initControlPanel() {
     try {
         if (root == null) root = new android.widget.FrameLayout(this);
@@ -29,8 +28,8 @@ public class MainActivity extends Activity {
         android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
         float density = dm.density;
         
-        // Высота панели. Сделаем чуть больше, чтобы влез закругленный угол
-        int panelHeight = (int) (56 * density); 
+        // Высота панели
+        int panelHeight = (int) (52 * density); 
         topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, panelHeight));
 
         // Кнопка "три точки"
@@ -39,35 +38,31 @@ public class MainActivity extends Activity {
         menuButton.setTextColor(android.graphics.Color.WHITE);
         menuButton.setTextSize(26);
         menuButton.setIncludeFontPadding(false);
-        menuButton.setGravity(android.view.Gravity.CENTER); // Центруем внутри самой кнопки
+        
+        // ВАЖНО: Прижимаем текст вправо и вверх внутри вьюхи
+        menuButton.setGravity(android.view.Gravity.TOP | android.view.Gravity.RIGHT);
 
-        // Размер контейнера самой кнопки (чтобы область нажатия была нормальной)
-        int btnSize = (int) (44 * density);
-        android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(btnSize, btnSize);
+        // Контейнер кнопки побольше, чтобы было проще попасть пальцем
+        int btnWidth = (int) (40 * density);
+        int btnHeight = (int) (40 * density);
+        android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(btnWidth, btnHeight);
+        
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
 
-        // --- РАСЧЕТ РЕАЛЬНЫХ ПИКСЕЛЕЙ ДЛЯ УГЛА ---
-        // Если Android 12+, пытаемся получить радиус скругления программно
-        int cornerOffset = (int) (12 * density); // Дефолт для средних скруглений
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            android.view.RoundedCorner corner = getWindowManager().getDefaultDisplay().getRoundedCorner(android.view.RoundedCorner.POSITION_TOP_RIGHT);
-            if (corner != null) {
-                // Берем радиус и добавляем пару пикселей "запаса", чтобы не липло впритык
-                cornerOffset = corner.getRadius() + (int)(2 * density);
-            }
-        }
+        // --- РАБОТА С ИЗГИБОМ УГЛА ---
+        // Эти значения выставляют точки ровно на границу видимости.
+        // Если точки всё еще "прячутся" — увеличивай эти числа на 2-3 единицы.
+        int safeRight = (int) (6 * density); // Отступ от правого физического края
+        int safeTop = (int) (4 * density);   // Отступ от верхнего физического края
 
-        // Выставляем маржины так, чтобы точки были СРАЗУ после закругления
-        // По рисунку: точки должны быть в самой верхней правой видимой части
-        btnParams.topMargin = (int) (4 * density); 
-        
-        // Магия тут: отступаем справа ровно столько, сколько съедает скругление
-        // Если они все еще "за экраном", увеличь этот множитель (например 0.4 -> 0.6)
-        int rightMarginPx = (int) (cornerOffset * 0.4f); 
-        btnParams.rightMargin = rightMarginPx;
+        btnParams.rightMargin = safeRight;
+        btnParams.topMargin = safeTop;
 
         menuButton.setLayoutParams(btnParams);
+        
+        // Убираем внутренние зазоры самой TextView, чтобы символ ⋮ был в самом углу контейнера
+        menuButton.setPadding(0, 0, 0, 0);
         
         menuButton.setOnClickListener(v -> {
             android.widget.PopupMenu popup = new android.widget.PopupMenu(this, v);
@@ -104,6 +99,7 @@ public class MainActivity extends Activity {
         android.util.Log.e("YT_BROWSER", "Error: " + e.getMessage());
     }
 }
+
 
 
     private boolean isAppForeground() {
