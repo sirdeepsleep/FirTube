@@ -13,6 +13,18 @@ import android.graphics.Color;
 
 public class ZeroActivity extends Activity {
 
+	private boolean isAppForeground() {
+    ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+    java.util.List<ActivityManager.RunningAppProcessInfo> procs = am.getRunningAppProcesses();
+    if (procs == null) return false;
+    for (ActivityManager.RunningAppProcessInfo p : procs) {
+        if (p.processName.equals(getPackageName())) {
+            return p.importance == ActivityManager.RunningAppProcessInfo.IMPORTANCE_FOREGROUND;
+        }
+    }
+    return false;
+    }
+	
     static boolean wait = true;   
 	static boolean BlockUnknownLinksAndProtocols = true;   
     static boolean rep = false;
