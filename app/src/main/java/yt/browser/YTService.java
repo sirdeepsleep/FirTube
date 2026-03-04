@@ -65,7 +65,7 @@ public class YTService extends Service {
     String host = url.getHost();
 
     if (host != null) {
-        boolean isEssential = host.matches("(^|.*\\.)(youtube|youtube-nocookie|google|googlevideo|gstatic|ytimg|ggpht)\\.[a-z.]+$");
+        boolean isEssential = (BlockUnknownLinksAndProtocols==false) || host.matches("(^|.*\\.)(youtube|youtube-nocookie|google|googlevideo|gstatic|ytimg|ggpht)\\.[a-z.]+$");
 
         if (!isEssential) {
             return new WebResourceResponse("text/plain", "UTF-8", null);
@@ -77,7 +77,7 @@ public class YTService extends Service {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, WebResourceRequest request) {
         String url = request.getUrl().toString();
-        if (url.startsWith("http")) {
+        if (BlockUnknownLinksAndProtocols==false || url.startsWith("http")) {
         return false; }
         return true; }
         
