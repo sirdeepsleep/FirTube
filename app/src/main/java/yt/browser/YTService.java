@@ -10,6 +10,41 @@ import java.util.List;
 
 public class YTService extends Service {
 
+    static void injectLogic(WebView v) {
+    if (v == null) return;
+    v.evaluateJavascript(
+        "clearInterval(window.ytTimer); window.ytTimer = setInterval(() => {" +
+        "  const video = document.querySelector('video');" +
+        "  const player = document.querySelector('#movie_player');" +
+        "  if (!video || !player) return;" +
+        "  const isAd = player.classList.contains('ad-showing') || player.classList.contains('ad-interrupting');" +
+        "  if (!isAd && isFinite(video.duration) && video.duration > 0) {" +
+        "  if ("+ZeroActivity.rep+"==true){"+
+        "    if (video.duration - video.currentTime <= 0.4) {" +
+        "      video.currentTime = 0;" +
+        "      video.play();" +
+        "    }}" +
+        "  }" +
+        "  if (isAd &&"+ZeroActivity.VideoAdsSkip+"==true) {" +
+        "    video.muted = true;" +
+        "    if (isFinite(video.duration) && video.duration > 0) {" +
+        "      video.currentTime = video.duration + 1;" +
+        "    }" +
+        "    const skipBtn = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern');" +
+        "    if (skipBtn) skipBtn.click();" +
+        "    video.play();" +
+        "  } else {" +
+        "    if (video.muted) video.muted = false;" +
+        "  }" +
+        "  const selectors = ['.ytp-ad-overlay-container', '.ytp-ad-message-container', 'ytm-companion-ad-renderer', 'ytm-promoted-sparkles-web-renderer', '.ad-unit', 'ytm-promoted-video-renderer'];" +
+        "  selectors.forEach(selector => {" +
+        "    const el = document.querySelector(selector);" +
+        "  if ("+ZeroActivity.bannerBlock+"==true){"+       
+        "    if (el) el.remove();" +
+        "  }});" +
+        "}, 200);", null);
+    }
+    
     @Override
     public void onCreate() {
         super.onCreate();
@@ -46,40 +81,13 @@ public class YTService extends Service {
         return false; }
         return true; }
         
+
         @Override
         public void onPageFinished(WebView view, String url) {
-            view.evaluateJavascript(
-                "setInterval(() => {" +
-                "  const video = document.querySelector('video');" +
-                "  const player = document.querySelector('#movie_player');" +
-                "  if (!video || !player) return;" +
-                "  const isAd = player.classList.contains('ad-showing') || player.classList.contains('ad-interrupting');" +
-                "  if (!isAd && isFinite(video.duration) && video.duration > 0) {" +
-                "  if ("+ZeroActivity.rep+"==true){"+
-                "    if (video.duration - video.currentTime <= 0.4) {" +
-                "      video.currentTime = 0;" +
-                "      video.play();" +
-                "    }}" +
-                "  }" +
-                "  if (isAd &&"+ZeroActivity.VideoAdsSkip+"==true) {" +
-                "    video.muted = true;" +
-                "    if (isFinite(video.duration) && video.duration > 0) {" +
-                "      video.currentTime = video.duration + 1;" +
-                "    }" +
-                "    const skipBtn = document.querySelector('.ytp-ad-skip-button, .ytp-ad-skip-button-modern');" +
-                "    if (skipBtn) skipBtn.click();" +
-                "    video.play();" +
-                "  } else {" +
-                "    if (video.muted) video.muted = false;" +
-                "  }" +
-                "  const selectors = ['.ytp-ad-overlay-container', '.ytp-ad-message-container', 'ytm-companion-ad-renderer', 'ytm-promoted-sparkles-web-renderer', '.ad-unit', 'ytm-promoted-video-renderer'];" +
-                "  selectors.forEach(selector => {" +
-                "    const el = document.querySelector(selector);" +
-                "  if ("+ZeroActivity.bannerBlock+"==true){"+       
-                "    if (el) el.remove();" +
-                "  }});" +
-                "}, 200);", null);
+        injectLogic(view);
         }
+
+        
     });
     v.loadUrl("https://m.youtube.com");
 }
