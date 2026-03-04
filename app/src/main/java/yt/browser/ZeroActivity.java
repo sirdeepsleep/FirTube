@@ -50,11 +50,15 @@ public class ZeroActivity extends Activity {
     }
     }
 
+	
     @Override
     protected void onPause() {
-       super.onPause();
-       finishAndRemoveTask();
-    }
+        super.onPause(); 
+          if (!isAppForeground()) {
+        ZeroActivity.wait = true;
+          }
+		finishAndRemoveTask();
+	}
 
        @Override
     protected void onResume() {
