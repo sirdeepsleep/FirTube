@@ -16,23 +16,27 @@ public class MainActivity extends Activity {
 
     private void initControlPanel() {
     try {
-        if (root == null) root = new android.widget.FrameLayout(this);
+        if (root == null) {
+            root = new android.widget.FrameLayout(this);
+        }
 
+        // 1. Основной вертикальный контейнер
         android.widget.LinearLayout mainLayout = new android.widget.LinearLayout(this);
         mainLayout.setOrientation(android.widget.LinearLayout.VERTICAL);
-        mainLayout.setLayoutParams(new android.view.ViewGroup.LayoutParams(-1, -1));
+        mainLayout.setLayoutParams(new android.view.ViewGroup.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, 
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT));
 
-        android.widget.RelativeLayout topPanel = new android.widget.RelativeLayout(this);
-        topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));
-        
+        // 2. Настройка геометрии (Твоя формула: X и Y)
         android.util.DisplayMetrics dm = getResources().getDisplayMetrics();
         float density = dm.density;
 
-        // --- ГЕОМЕТРИЯ СКРУГЛЕНИЯ ---
-        int cornerRadius = (int) (16 * density); // Дефолтное значение X и Y
+        // "Виртуальный сантиметр" (32dp — комфортный минимум для пальца и визуала)
+        int safeMarginPx = (int) (32 * density); 
+        int cornerRadius = 0;
 
+        // Пытаемся получить реальное физическое скругление X
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
-            // Пытаемся получить реальный радиус скругления дисплея (X)
             android.view.RoundedCorner topCorner = getWindowManager().getDefaultDisplay()
                     .getRoundedCorner(android.view.RoundedCorner.POSITION_TOP_RIGHT);
             if (topCorner != null) {
@@ -40,26 +44,27 @@ public class MainActivity extends Activity {
             }
         }
 
-        // Точка X: Панель высотой ровно до места, где заканчивается закругление
-        int panelHeight = cornerRadius; 
-        topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, panelHeight));
+        // Итоговая величина X и Y: берем максимум из физики и "сантиметра"
+        int finalXY = Math.max(cornerRadius, safeMarginPx);
 
-        // Кнопка "три точки"
+        // 3. Создаем панель управления высотой X
+        android.widget.RelativeLayout topPanel = new android.widget.RelativeLayout(this);
+        topPanel.setBackgroundColor(android.graphics.Color.parseColor("#1A1A1A"));
+        topPanel.setLayoutParams(new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, finalXY));
+
+        // 4. Кнопка "три точки" внутри прямого угла (квадрат XY на XY)
         android.widget.TextView menuButton = new android.widget.TextView(this);
         menuButton.setText("⋮"); 
         menuButton.setTextColor(android.graphics.Color.WHITE);
-        menuButton.setTextSize(22); // Размер подбираем, чтобы влезло в угол
+        menuButton.setTextSize(22);
         menuButton.setIncludeFontPadding(false);
         menuButton.setGravity(android.view.Gravity.CENTER);
 
-        // Кнопка размером ровно под квадрат в углу (X на X)
-        // Точка Y: Это край этого квадрата по горизонтали
         android.widget.RelativeLayout.LayoutParams btnParams = new android.widget.RelativeLayout.LayoutParams(
-                cornerRadius, cornerRadius);
-        
+                finalXY, finalXY);
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_RIGHT);
         btnParams.addRule(android.widget.RelativeLayout.ALIGN_PARENT_TOP);
-        
         menuButton.setLayoutParams(btnParams);
         
         menuButton.setOnClickListener(v -> {
@@ -67,11 +72,12 @@ public class MainActivity extends Activity {
             popup.getMenu().add(0, 1, 0, "Settings");
             popup.getMenu().add(0, 2, 0, "Back");
             popup.getMenu().add(0, 3, 0, "Restart");
+
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id == 1) {
                     Intent i = new Intent(this, ZeroActivity.class);
-                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
                     startActivity(i);
                     moveTaskToBack(true);
                 } else if (id == 2) {
@@ -84,10 +90,17 @@ public class MainActivity extends Activity {
             popup.show();
         });
 
-        // Контейнер WebView
-        if (root.getParent() != null) ((android.view.ViewGroup) root.getParent()).removeView(root);
-        root.setLayoutParams(new android.widget.LinearLayout.LayoutParams(-1, 0, 1.0f));
+        // 5. Привязка WebView (root)
+        android.view.ViewParent parent = root.getParent();
+        if (parent instanceof android.view.ViewGroup) {
+            ((android.view.ViewGroup) parent).removeView(root);
+        }
+        
+        android.widget.LinearLayout.LayoutParams webParams = new android.widget.LinearLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, 0, 1.0f);
+        root.setLayoutParams(webParams);
 
+        // 6. Сборка UI
         topPanel.addView(menuButton);
         mainLayout.addView(topPanel);
         mainLayout.addView(root);
@@ -95,12 +108,8 @@ public class MainActivity extends Activity {
         setContentView(mainLayout);
         
     } catch (Exception e) {
-        android.util.Log.e("YT_BROWSER", "Error: " + e.getMessage());
-    }
-}
-
-
-
+        android.util.Log.e("YT_BROWSER", "Error in initControlPanel: " + e.getMessage());
+    }}
 
     private boolean isAppForeground() {
     ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
