@@ -99,7 +99,7 @@ public class MainActivity extends Activity {
         setContentView(mainLayout);
         
     } catch (Exception e) {
-        android.util.Log.e("YT_BROWSER", "Error in initControlPanel: " + e.getMessage());
+        
     }}
 
     private boolean isAppForeground() {
