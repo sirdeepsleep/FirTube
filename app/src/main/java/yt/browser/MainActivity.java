@@ -59,8 +59,11 @@ public class MainActivity extends Activity {
             popup.setOnMenuItemClickListener(item -> {
                 int id = item.getItemId();
                 if (id == 1) {
-                    startActivity(new android.content.Intent(this, ZeroActivity.class));
-                } else if (id == 2) {
+                    Intent i = new Intent(this, ZeroActivity.class);
+                    i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
+                    startActivity(i);
+                    moveTaskToBack(true);
+                  } else if (id == 2) {
                     if (sharedWeb != null && sharedWeb.canGoBack()) sharedWeb.goBack();
                 } else if (id == 3) {
                     if (sharedWeb != null) sharedWeb.reload();
