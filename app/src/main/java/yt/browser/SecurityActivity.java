@@ -18,10 +18,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.security.MessageDigest;
-
-import org.bouncycastle.crypto.generators.Argon2BytesGenerator;
-import org.bouncycastle.crypto.params.Argon2Parameters;
-
 import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.Arrays;
