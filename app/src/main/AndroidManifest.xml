@@ -8,7 +8,7 @@
 
     <application
         android:label="FirTube"
-		android:icon="@drawable/FirTube"
+		android:icon="@drawable/firtube"
 		android:allowBackup="false"
 		android:debuggable="false"
 		android:requestLegacyExternalStorage="false"
