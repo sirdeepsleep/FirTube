@@ -1,4 +1,4 @@
-package yt.browser;
+package fir.tube;
 
 import android.app.*;
 import android.content.*;
@@ -119,7 +119,7 @@ public class YTService extends Service {
     }
 
     if (needNew || activeId == null) {
-        activeId = "yt.browser" + Long.toHexString(new java.security.SecureRandom().nextLong());
+        activeId = "fir.tube" + Long.toHexString(new java.security.SecureRandom().nextLong());
         NotificationChannel nch = new NotificationChannel(activeId, "Media Play", NotificationManager.IMPORTANCE_DEFAULT);
         nm.createNotificationChannel(nch);
     }
