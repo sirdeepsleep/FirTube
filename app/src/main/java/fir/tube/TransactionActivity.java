@@ -58,7 +58,7 @@ public class TransactionActivity extends Activity {
     private void showWelcomeDialog(final android.content.SharedPreferences prefs) {
     android.app.AlertDialog d = new android.app.AlertDialog.Builder(this)
             .setTitle("Hello!")
-            .setMessage("YTbrowser — browser based on Android webView for watching YouTube.\n\n" +
+            .setMessage("FirTube — browser based on Android webView for watching YouTube.\n\n" +
                     "Features:\n" +
                     "— Background play mode.\n" +
                     "— Ad blocking and skipping.\n" +
