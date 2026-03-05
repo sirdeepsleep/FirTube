@@ -3,7 +3,7 @@ id 'com.android.application'
 }
 
 android {
-namespace "yt.browser"
+namespace "fir.tube"
 compileSdk 35
 
 lint {
@@ -11,7 +11,7 @@ lint {
     }
 
 defaultConfig {  
-    applicationId "yt.browser"  
+    applicationId "fir.tube"  
     minSdk 29
     targetSdk 36
     versionCode 1
