@@ -8,7 +8,7 @@ use argon2::{
 use rand::rngs::OsRng;
 
 #[no_mangle]
-pub extern "system" fn Java_yt_browser_SecurityActivity_argonHash(
+pub extern "system" fn Java_fir_tube_SecurityActivity_argonHash(
     mut env: JNIEnv,
     _class: JClass,
     input: JString,
@@ -28,7 +28,7 @@ pub extern "system" fn Java_yt_browser_SecurityActivity_argonHash(
 }
 
 #[no_mangle]
-pub extern "system" fn Java_yt_browser_SecurityActivity_argonVerify(
+pub extern "system" fn Java_fir_tube_SecurityActivity_argonVerify(
     mut env: JNIEnv,
     _class: JClass,
     input: JString,
