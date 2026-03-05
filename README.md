@@ -1,6 +1,6 @@
-# YTbrowser
+#FirTube
 
-YTbrowser — browser based on Android webView for watching YouTube.
+FirTube — browser based on Android webView for watching YouTube.
 
 ​Features:  
 — ​Background play mode.  
