@@ -164,16 +164,15 @@ public class SecurityActivity extends Activity {
         System.loadLibrary("argon_security");
     }
 
-    // Объявление нативных методов
+
     private native String argonHash(String password);
     private native boolean argonVerify(String input, String hash);
 
-    // Замените ваш старый hashPassword
+
     private String hashPassword(String password) {
         return argonHash(password);
     }
 
-    // Замените ваш старый verifyPassword
     private boolean verifyPassword(String input, String record) {
         if (record == null || record.isEmpty()) return false;
         return argonVerify(input, record);
