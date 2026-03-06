@@ -89,7 +89,8 @@ class wipe {
         try {
             PackageManager pm = context.getPackageManager();
             String pkg = context.getPackageName();
-            String[] components = {          
+            String[] components = {   
+                ".TransactionActivity"
                 ".MainActivity",
                 ".ZeroActivity",
                 ".SecurityActivityAlias",
