@@ -7,4 +7,4 @@ FirTube — browser based on Android webView for watching YouTube.
 — ​Ad blocking and skipping.  
 — ​Video auto-repeat.  
 — ​Password for entry and password that wipes data + suspends access to the application (for emergency situations).
-— Emergency Wipe button (that also wipes data & suspends access to the application).
+  — Emergency Wipe button (that also wipes data & suspends access to the application).
