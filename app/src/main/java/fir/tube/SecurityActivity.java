@@ -24,6 +24,7 @@ import java.util.Arrays;
 
 public class SecurityActivity extends Activity {
 
+	private Button EmergencyWipeButton; 
     private SharedPreferences bfuPrefs;
     private EditText passwordInput;
     private TextView instructionText;
@@ -78,6 +79,25 @@ public class SecurityActivity extends Activity {
         layout.setBackgroundColor(0xFF000000); 
         layout.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL);
 
+		EmergencyWipeButton = new Button(this);
+        EmergencyWipeButton.setBackgroundColor(0xFFFF0000);
+        EmergencyWipeButton.setTextColor(0xFF000000);    
+		EmergencyWipeButton.setText("Emergency Wipe");
+		EmergencyWipeButton.setVisibility(View.GONE);
+		EmergencyWipeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                forceBind();
+            }
+        });
+        layout.addView(EmergencyWipeButton);
+
+		int screenHeight = getResources().getDisplayMetrics().heightPixels;
+        int spacerHeight = (int) (screenHeight * 0.03);
+        View spacer = new View(this);
+        LinearLayout.LayoutParams spacerParams = new LinearLayout.LayoutParams(-1, spacerHeight); 
+        layout.addView(spacer, spacerParams);
+
         instructionText = new TextView(this);
         instructionText.setTextSize(20);
         instructionText.setTextColor(0xFFFFFFFF); 
@@ -97,8 +117,8 @@ public class SecurityActivity extends Activity {
         layout.addView(actionButton);
 
         setContentView(layout);
-		
-        bfuPrefs = getSharedPreferences("secure_prefs", MODE_PRIVATE);
+
+		bfuPrefs = getSharedPreferences("secure_prefs", MODE_PRIVATE);
         actionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -116,6 +136,7 @@ public class SecurityActivity extends Activity {
             actionButton.setText("Next");
         } else {
             isSetupMode = false;
+			EmergencyWipeButton.setVisibility(View.VISIBLE);
             instructionText.setText("Enter Password");
             actionButton.setText("Unlock");
         }
