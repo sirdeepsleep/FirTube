@@ -1,0 +1,21 @@
+name: Generate Cargo Lock
+on: [push, workflow_dispatch] # Запускается при пуше или вручную
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+      - name: Generate Lockfile
+        run: |
+          cd app/src/main/rust/
+          cargo generate-lockfile
+      - name: Commit and Push Lockfile
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add app/src/main/rust/Cargo.lock
+          git commit -m "Auto-generate Cargo.lock" || exit 0
+          git push
