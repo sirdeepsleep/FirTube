@@ -1,5 +1,5 @@
 name: Generate Cargo Lock
-on: [push, workflow_dispatch] # Запускается при пуше или вручную
+on: [push, workflow_dispatch]
 
 jobs:
   build:
