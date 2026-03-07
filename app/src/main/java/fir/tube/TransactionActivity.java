@@ -61,7 +61,7 @@ public class TransactionActivity extends Activity {
             .setMessage("FirTube — browser based on Android webView for watching YouTube.\n\n" +
                     "Features:\n" +
                     "— Background play mode.\n" +
-                    "— Ad blocking and skipping.\n" +
+                    "— Ad blocking and skipping (expiremental).\n" +
                     "— Video auto-repeat.\n" +
                     "— Password for entry and password that wipes data + suspends access to the application (for emergency situations).\n"+
 					"— Emergency Wipe button (that also wipes data & suspends access to the application).")
