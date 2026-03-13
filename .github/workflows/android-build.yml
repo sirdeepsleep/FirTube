@@ -32,7 +32,6 @@ jobs:
       - name: Build Rust Native Library
         run: |
           cd app/src/main/rust
-          # Флаги для идентичности бинарников на разных серверах
           export RUSTFLAGS="-C strip=symbols -C codegen-units=1 --remap-path-prefix=$(pwd)=/build"
           cargo ndk -t arm64-v8a -t armeabi-v7a -t x86_64 build --release
           
