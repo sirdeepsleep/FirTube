@@ -13,9 +13,9 @@ lint {
 defaultConfig {  
     applicationId "fir.tube"  
     minSdk 29
-    targetSdk 36
-    versionCode 3
-    versionName "3.0"  
+    targetSdk 37
+    versionCode 4
+    versionName "4.0"  
 }  
 
 buildTypes {  
