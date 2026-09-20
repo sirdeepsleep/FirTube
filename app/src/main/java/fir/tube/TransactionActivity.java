@@ -28,18 +28,6 @@ public class TransactionActivity extends Activity {
 			| View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         );    
 
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-
-        if (!Intent.ACTION_MAIN.equals(intent.getAction()) || 
-            !intent.hasCategory(Intent.CATEGORY_LAUNCHER) || 
-            (extras != null && !extras.isEmpty())) {
-            finishAndRemoveTask();
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(0);
-            return;
-        }
-
         SharedPreferences prefs = getSharedPreferences("first_launch_prefs", MODE_PRIVATE);
 
         if (!prefs.getBoolean("welcome_done", false)) {
@@ -58,13 +46,13 @@ public class TransactionActivity extends Activity {
     private void showWelcomeDialog(final android.content.SharedPreferences prefs) {
     android.app.AlertDialog d = new android.app.AlertDialog.Builder(this)
             .setTitle("Hello!")
-            .setMessage("FirTube — browser based on Android webView for watching YouTube.\n\n" +
+            .setMessage("FirTube — simple webView browser for YouTube\n\n" +
                     "Features:\n" +
-                    "— Background play mode.\n" +
-                    "— Ad blocking and skipping (expiremental).\n" +
-                    "— Video auto-repeat.\n" +
-                    "— Password for entry and password that wipes data + suspends access to the application (for emergency situations).\n"+
-					"— Emergency Wipe button (that also wipes data & suspends access to the application).")
+                    "— Background play mode\n" +
+                    "— Ad block and skip\n" +
+                    "— Video auto-repeat\n" +
+                    "— You can set password for the app\n"+
+					"— Data Wipe button")
             .setPositiveButton("OK", (dialog, which) -> {
                 prefs.edit().putBoolean("welcome_done", true).apply();
                 startSecurityAndFinish();
