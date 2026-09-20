@@ -29,10 +29,9 @@ public class ZeroActivity extends Activity {
 	
     static boolean wait = true;   
 	static boolean BlockUnknownLinksAndProtocols = true;   
-    static boolean rep = false;
-    static boolean back = false;
-    static boolean bannerBlock = false;
-    static boolean VideoAdsSkip = false;
+    static boolean rep = true;
+    static boolean bannerBlock = true;
+    static boolean VideoAdsSkip = true;
 
     private void showConfirm(String title, String message, Runnable onConfirm) {
     AlertDialog d = new AlertDialog.Builder(this, AlertDialog.THEME_DEVICE_DEFAULT_DARK)
@@ -78,7 +77,6 @@ public class ZeroActivity extends Activity {
     @Override
     protected void onCreate(Bundle b) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(b); 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -103,46 +101,31 @@ public class ZeroActivity extends Activity {
         swRep.setPadding(0, 50, 0, 50);
         swRep.setOnCheckedChangeListener((v, isChecked) -> rep = isChecked);
         root.addView(swRep);
-
-        Switch swBack = new Switch(this);
-        swBack.setText("Background Play   ");
-        swBack.setTextColor(Color.WHITE);
-        swBack.setTextSize(20);
-        swBack.setChecked(back);
-        swBack.setPadding(0, 50, 0, 50);
-        swBack.setOnCheckedChangeListener((v, isChecked) -> back = isChecked);
-        root.addView(swBack);
-
+        
         Switch swBB = new Switch(this);
-        swBB.setText("Banner Block (expiremental & may not work)  ");
+        swBB.setText("Banner Block");
         swBB.setTextColor(Color.WHITE);
         swBB.setTextSize(20);
         swBB.setChecked(bannerBlock);
         swBB.setPadding(0, 50, 0, 50);
         swBB.setOnClickListener(v -> {
         if (swBB.isChecked()) {
-        swBB.setChecked(false);
-        showConfirm("Do you really want disable banners?", 
-            "This may be unfair to the platform and its creators, as they will not be able to make money from creating and posting content.", 
-            () -> { bannerBlock = true; swBB.setChecked(true); });
+		bannerBlock = true;	
         } else {
         bannerBlock = false;
         }});
         root.addView(swBB);
 
         Switch swVBS = new Switch(this);
-        swVBS.setText("Video Ads Skip (expiremental & may not work)  ");
+        swVBS.setText("Video Ads Skip");
         swVBS.setTextColor(Color.WHITE);
         swVBS.setTextSize(20);
         swVBS.setChecked(VideoAdsSkip);
         swVBS.setPadding(0, 50, 0, 50);
         swVBS.setOnClickListener(v -> {
         if (swVBS.isChecked()) {
-        swVBS.setChecked(false);
-        showConfirm("Do you really want disable ads in videos?", 
-            "This may be unfair to the platform and its creators, as they will not be able to make money from creating and posting content.", 
-            () -> { VideoAdsSkip = true; swVBS.setChecked(true); });
-         } else {
+		VideoAdsSkip = true;	
+        } else {
         VideoAdsSkip = false;
         }});
         root.addView(swVBS);
