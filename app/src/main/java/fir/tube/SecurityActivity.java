@@ -61,7 +61,6 @@ public class SecurityActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(savedInstanceState);
 		getWindow().getDecorView().setSystemUiVisibility(
 			View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
@@ -82,7 +81,7 @@ public class SecurityActivity extends Activity {
 		EmergencyWipeButton = new Button(this);
         EmergencyWipeButton.setBackgroundColor(0xFFFF0000);
         EmergencyWipeButton.setTextColor(0xFF000000);    
-		EmergencyWipeButton.setText("Emergency Wipe");
+		EmergencyWipeButton.setText("Wipe Data");
 		EmergencyWipeButton.setVisibility(View.GONE);
 		EmergencyWipeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,7 +131,7 @@ public class SecurityActivity extends Activity {
     private void checkState() {
         if (!bfuPrefs.contains("pass_hash")) {
             isSetupMode = true;
-            instructionText.setText("Set Unlock Password (that opens browser). Please set a unique password, which you don't use in other apps or accounts.\n");
+            instructionText.setText("Set Unlock Password for the app\n");
             actionButton.setText("Next");
         } else {
             isSetupMode = false;
@@ -150,7 +149,7 @@ public class SecurityActivity extends Activity {
             String hashed = hashPassword(input);
             if (tempMainHash == null) {
                 tempMainHash = hashed;
-                instructionText.setText("Set Duress Password (that wipes browser data and disables access to app). Please set a unique password, which you don't use in other apps or accounts.\n");
+                instructionText.setText("Set Data Wipe Password for the app\n");
                 actionButton.setText("Finish Setup");
             } else {
                 bfuPrefs.edit()
