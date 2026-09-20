@@ -1,1 +1,1 @@
-FirTube — browser based on Android webView for watching YouTube.
+FirTube — simple webView browser for YouTube
