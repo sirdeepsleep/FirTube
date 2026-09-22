@@ -5,13 +5,9 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.*;
 import android.widget.FrameLayout;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 public class MainActivity extends Activity {
@@ -19,102 +15,8 @@ public class MainActivity extends Activity {
     private FrameLayout root;
 
     static View fsView;
-    static WebChromeClient.CustomViewCallback fsCallback;
-    static int fsPrevOrientation = ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
-
-    static java.lang.ref.WeakReference<MainActivity> cur;
-
-    static void onWebDied(final WebView dead) {
-        new android.os.Handler(android.os.Looper.getMainLooper()).post(new Runnable() {
-            @Override public void run() {
-                MainActivity a = cur != null ? cur.get() : null;
-                if (a != null) a.hideFullscreenView(false);
-                try {
-                    ViewParent p = dead.getParent();
-                    if (p instanceof ViewGroup) ((ViewGroup) p).removeView(dead);
-                    dead.destroy();
-                } catch (Exception ignored) {}
-
-                sharedWeb = new MyWebView(dead.getContext().getApplicationContext());
-                YTService.setupWebStatic(sharedWeb);
-                if (a != null) sharedWeb.setWebChromeClient(a.chrome);
-                if (a != null && !YTService.bg) {
-                    a.attachToUI();
-                } else {
-                    WebHost.attach(sharedWeb.getContext(), sharedWeb, null);
-                }
-            }
-        });
-    }
-
-    private final WebChromeClient chrome = new WebChromeClient() {
-        @Override
-        public void onShowCustomView(View view, CustomViewCallback callback) {
-            if (fsView != null) {
-                callback.onCustomViewHidden();
-                return;
-            }
-            fsView = view;
-            fsCallback = callback;
-            fsPrevOrientation = getRequestedOrientation();
-            showFullscreenView();
-        }
-
-        @Override
-        public void onHideCustomView() {
-            hideFullscreenView(false);
-        }
-
-        @Override
-        public Bitmap getDefaultVideoPoster() {
-            return Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-        }
-    };
-
-    private void showFullscreenView() {
-        if (fsView == null) return;
-        ViewGroup decor = (ViewGroup) getWindow().getDecorView();
-
-        ViewParent p = fsView.getParent();
-        if (p instanceof ViewGroup) {
-            ((ViewGroup) p).removeView(fsView);
-        }
-
-        fsView.setBackgroundColor(Color.BLACK);
-        decor.addView(fsView, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
-        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        applyImmersive();
-    }
-
-    private void hideFullscreenView(boolean notifyPage) {
-        if (fsView == null) return;
-        View v = fsView;
-        WebChromeClient.CustomViewCallback cb = fsCallback;
-        fsView = null;
-        fsCallback = null;
-
-        ViewParent p = v.getParent();
-        if (p instanceof ViewGroup) {
-            ((ViewGroup) p).removeView(v);
-        }
-
-        setRequestedOrientation(fsPrevOrientation);
-        if (notifyPage && cb != null) cb.onCustomViewHidden();
-        applyImmersive();
-    }
-
-    private void applyImmersive() {
-        getWindow().getDecorView().setSystemUiVisibility(
-            View.SYSTEM_UI_FLAG_LAYOUT_STABLE |
-            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION |
-            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN |
-            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION |
-            View.SYSTEM_UI_FLAG_FULLSCREEN |
-            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        );
-    }
+    static android.webkit.WebChromeClient.CustomViewCallback fsCallback;
+    static int fsPrevOrientation = android.content.pm.ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED;
 
     private void initControlPanel() {
     try {
@@ -216,51 +118,29 @@ public class MainActivity extends Activity {
     return false;
     }
     
-    static final boolean forceActive = true;
-
     static class MyWebView extends WebView {
         MyWebView(Context context) {
             super(context);
         }
 
         @Override
-        public void dispatchWindowVisibilityChanged(int visibility) {
-            super.dispatchWindowVisibilityChanged(forceActive ? View.VISIBLE : visibility);
-        }
-
-        @Override
         protected void onWindowVisibilityChanged(int visibility) {
-            super.onWindowVisibilityChanged(forceActive ? View.VISIBLE : visibility);
-        }
-
-        @Override
-        protected void onVisibilityChanged(View changedView, int visibility) {
-            super.onVisibilityChanged(changedView, forceActive ? View.VISIBLE : visibility);
-        }
-
-        @Override
-        public int getWindowVisibility() {
-            return forceActive ? View.VISIBLE : super.getWindowVisibility();
-        }
-
-        @Override
-        public void dispatchWindowFocusChanged(boolean hasFocus) {
-            super.dispatchWindowFocusChanged(forceActive ? true : hasFocus);
+            if (ZeroActivity.back) {    
+                super.onWindowVisibilityChanged(View.VISIBLE);
+                if (visibility != View.VISIBLE) detachFromUI();                          
+            } else {
+                super.onWindowVisibilityChanged(visibility);
+            }
         }
 
         @Override
         public void onWindowFocusChanged(boolean hasWindowFocus) {
-            super.onWindowFocusChanged(forceActive ? true : hasWindowFocus);
-        }
-
-        @Override
-        public boolean hasWindowFocus() {
-            return forceActive ? true : super.hasWindowFocus();
-        }
-
-        @Override
-        public boolean isShown() {
-            return forceActive ? true : super.isShown();
+            if (ZeroActivity.back) {                                        
+                super.onWindowFocusChanged(true); 
+                if (!hasWindowFocus) detachFromUI();
+            } else {
+                super.onWindowFocusChanged(hasWindowFocus);
+            }
         }
     }
 
@@ -269,92 +149,130 @@ public class MainActivity extends Activity {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(b);
-        cur = new java.lang.ref.WeakReference<MainActivity>(this);
         root = new FrameLayout(this);
         initControlPanel(); 
         
         if (sharedWeb == null) {
             sharedWeb = new MyWebView(getApplicationContext());
             YTService.setupWebStatic(sharedWeb);
-        }
+        }        
         sharedWeb.setWebChromeClient(chrome);
         attachToUI();
-
-        if (fsView != null) showFullscreenView();
-
+        if (fsView != null) showFullscreenView();        
         startForegroundService(new Intent(this, YTService.class));
     }
 
     private void attachToUI() {
-        if (sharedWeb.getParent() == root) return;
-        if (sharedWeb.getParent() != null) {
-            ((ViewGroup) sharedWeb.getParent()).removeView(sharedWeb);
-        }
-        root.addView(sharedWeb);
+        try {        
+        if (sharedWeb != null && sharedWeb.getParent() == null) root.addView(sharedWeb);
+        } catch (Throwable t) {}
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        YTService.bg = false;
-        if (sharedWeb != null) attachToUI();
-        if (fsView != null && fsView.getParent() != getWindow().getDecorView()) showFullscreenView();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        YTService.bg = true;
-        if (sharedWeb != null) {
-            sharedWeb.onResume();
-            sharedWeb.resumeTimers();
-            WebHost.attach(getApplicationContext(), sharedWeb, fsView);
-        }
+    private static void detachFromUI() {
+    try {
+    if (sharedWeb != null && sharedWeb.getParent() != null) ((ViewGroup) sharedWeb.getParent()).removeView(sharedWeb);
+    } catch (Throwable t) {}
     }
 
     @Override
     protected void onPause() {
-        super.onPause(); 
+        super.onPause();           
           if (!isAppForeground()) {
-        ZeroActivity.wait = true;
-          }       
-        if (sharedWeb != null) {
-            sharedWeb.onResume();      
-            sharedWeb.resumeTimers();  
-        }
+             ZeroActivity.wait = true;
+          }               
+    }
+
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+    super.onWindowFocusChanged(hasFocus);
+    if (hasFocus) attachToUI();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        attachToUI();
         if (ZeroActivity.wait) {
            Intent i = new Intent(this, SecurityActivity.class);
            i.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT | Intent.FLAG_ACTIVITY_MULTIPLE_TASK);
            startActivity(i);
            moveTaskToBack(true);
         }
-        
-        if (sharedWeb != null) {
-            attachToUI();
-            sharedWeb.onResume();
-            sharedWeb.resumeTimers();
-        }
-
-        applyImmersive();
+                
+        getWindow().getDecorView().setSystemUiVisibility(
+            View.SYSTEM_UI_FLAG_LAYOUT_STABLE | 
+            View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | 
+            View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | 
+            View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | 
+            View.SYSTEM_UI_FLAG_FULLSCREEN | 
+            View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        );
     }
-
+  
+    private final android.webkit.WebChromeClient chrome = new android.webkit.WebChromeClient() {
     @Override
-    protected void onDestroy() {
-        if (isFinishing()) hideFullscreenView(true);
-        super.onDestroy();
-    }
-    
-    @Override
-    public void onBackPressed() {
+    public void onShowCustomView(View view, CustomViewCallback callback) {
         if (fsView != null) {
-            hideFullscreenView(true);
+            callback.onCustomViewHidden();
             return;
         }
-        moveTaskToBack(true);
+        fsView = view;
+        fsCallback = callback;
+        fsPrevOrientation = getRequestedOrientation();
+        showFullscreenView();
     }
+
+    @Override
+    public void onHideCustomView() {
+        hideFullscreenView(false);
+    }
+
+    @Override
+    public android.graphics.Bitmap getDefaultVideoPoster() {
+        return android.graphics.Bitmap.createBitmap(1, 1, android.graphics.Bitmap.Config.ARGB_8888);
+    } };
+
+    private void showFullscreenView() {
+    if (fsView == null) return;
+    ViewGroup decor = (ViewGroup) getWindow().getDecorView();
+
+    ViewParent p = fsView.getParent();
+    if (p instanceof ViewGroup) {
+        ((ViewGroup) p).removeView(fsView);
+    }
+
+    fsView.setBackgroundColor(android.graphics.Color.BLACK);
+    decor.addView(fsView, new FrameLayout.LayoutParams(
+            ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+    setRequestedOrientation(android.content.pm.ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);    
+
+    }
+
+
+    private void hideFullscreenView(boolean notifyPage) {
+    if (fsView == null) return;
+    View v = fsView;
+    android.webkit.WebChromeClient.CustomViewCallback cb = fsCallback;
+    fsView = null;
+    fsCallback = null;
+
+    ViewParent p = v.getParent();
+    if (p instanceof ViewGroup) {
+        ((ViewGroup) p).removeView(v);
+    }
+
+    setRequestedOrientation(fsPrevOrientation);
+    if (notifyPage && cb != null) cb.onCustomViewHidden();
+    }
+         
+    @Override
+    public void onBackPressed() {
+    if (fsView != null) {
+        hideFullscreenView(true);
+        return;
+    }
+    moveTaskToBack(true);
+    }
+    
 }
