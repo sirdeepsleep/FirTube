@@ -30,6 +30,7 @@ public class ZeroActivity extends Activity {
     static boolean wait = true;   
 	static boolean BlockUnknownLinksAndProtocols = true;   
     static boolean rep = true;
+    static boolean back = true;
     static boolean bannerBlock = true;
     static boolean VideoAdsSkip = true;
 
@@ -77,6 +78,7 @@ public class ZeroActivity extends Activity {
     @Override
     protected void onCreate(Bundle b) {
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_SECURE);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         super.onCreate(b); 
         LinearLayout root = new LinearLayout(this);
         root.setOrientation(LinearLayout.VERTICAL);
@@ -101,33 +103,36 @@ public class ZeroActivity extends Activity {
         swRep.setPadding(0, 50, 0, 50);
         swRep.setOnCheckedChangeListener((v, isChecked) -> rep = isChecked);
         root.addView(swRep);
-        
+
+        Switch swBack = new Switch(this);
+        swBack.setText("Background Play   ");
+        swBack.setTextColor(Color.WHITE);
+        swBack.setTextSize(20);
+        swBack.setChecked(back);
+        swBack.setPadding(0, 50, 0, 50);
+        swBack.setOnCheckedChangeListener((v, isChecked) -> back = isChecked);
+        root.addView(swBack);
+
         Switch swBB = new Switch(this);
-        swBB.setText("Banner Block");
+        swBB.setText("Banner Block  ");
         swBB.setTextColor(Color.WHITE);
         swBB.setTextSize(20);
         swBB.setChecked(bannerBlock);
         swBB.setPadding(0, 50, 0, 50);
-        swBB.setOnClickListener(v -> {
-        if (swBB.isChecked()) {
-		bannerBlock = true;	
-        } else {
-        bannerBlock = false;
-        }});
+        swBB.setOnClickListener(v -> {        
+        bannerBlock = swBB.isChecked();
+        });
         root.addView(swBB);
 
         Switch swVBS = new Switch(this);
-        swVBS.setText("Video Ads Skip");
+        swVBS.setText("Video Ads Skip  ");
         swVBS.setTextColor(Color.WHITE);
         swVBS.setTextSize(20);
         swVBS.setChecked(VideoAdsSkip);
         swVBS.setPadding(0, 50, 0, 50);
-        swVBS.setOnClickListener(v -> {
-        if (swVBS.isChecked()) {
-		VideoAdsSkip = true;	
-        } else {
-        VideoAdsSkip = false;
-        }});
+        swVBS.setOnClickListener(v -> {			                
+		VideoAdsSkip = swVBS.isChecked();		
+		});
         root.addView(swVBS);
 
         Button btn = new Button(this);
