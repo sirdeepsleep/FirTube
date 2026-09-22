@@ -12,7 +12,7 @@ lint {
 
 defaultConfig {  
     applicationId "fir.tube"  
-    minSdk 30
+    minSdk 29
     targetSdk 37
     versionCode 6
     versionName "6.0"  
